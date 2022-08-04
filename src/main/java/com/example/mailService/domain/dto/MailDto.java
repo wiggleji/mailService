@@ -3,6 +3,7 @@ package com.example.mailService.domain.dto;
 import com.example.mailService.domain.entity.MailFile;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -10,9 +11,10 @@ import java.util.List;
 
 public class MailDto {
 
+    @Getter
     @Builder
     @AllArgsConstructor
-    public static class MailInfoList {
+    public static class MailInfoListDto {
         private Long id;
 
         private String emailFrom;
@@ -28,9 +30,10 @@ public class MailDto {
         private LocalDateTime dateTimeReceive;
     }
 
+    @Getter
     @Builder
     @AllArgsConstructor
-    public static class MailInfo {
+    public static class MailInfoDto {
         private Long id;
 
         private String emailFrom;
@@ -47,14 +50,15 @@ public class MailDto {
 
         private String threadId;
 
-        private List<MailInfo> threadMails = new ArrayList<>();
+        private List<MailInfoDto> threadMails = new ArrayList<>();
 
         private List<MailMetadataDto> metadata = new ArrayList<>();
     }
 
+    @Getter
     @Builder
     @AllArgsConstructor
-    public static class MailCreate {
+    public static class MailCreateDto {
         private String emailFrom;
 
         private String emailTo;
