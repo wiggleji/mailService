@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -14,31 +15,24 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Mail {
+@Table(name = "mail")
+public class Mail extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private String emailFrom;
+
+    private String emailTo;
 
     private String subject;
 
     private String content;
 
-    private LocalDateTime dateTimeCreated;
-
     private LocalDateTime dateTimeSend;
 
-    private String thread_id;
+    private LocalDateTime dateTimeReceive;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User sender;
-
-    @OneToMany(mappedBy = "mail")
-    private List<MailMetadata> metadata;
-
-    @PrePersist
-    public void dateTimeCreated() {
-        this.dateTimeCreated = LocalDateTime.now();
-    }
+    private String threadId;
 }

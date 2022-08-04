@@ -12,7 +12,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class MailFile {
+public class MailFile extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

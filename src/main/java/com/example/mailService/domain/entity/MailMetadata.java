@@ -13,27 +13,20 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class MailMetadata {
+public class MailMetadata extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    private String name;
+
+    private String email;
+
     @Enumerated(EnumType.STRING)
     private CarbonCopy carbonCopy;
-
-    private LocalDateTime dateTimeCreated;
 
     @ManyToOne
     @JoinColumn(name = "mail_id")
     private Mail mail;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User receiver;
-
-    @PrePersist
-    public void dateTimeCreated() {
-        this.dateTimeCreated = LocalDateTime.now();
-    }
 }

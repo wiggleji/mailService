@@ -12,7 +12,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class UserSignature {
+public class UserSignature extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
