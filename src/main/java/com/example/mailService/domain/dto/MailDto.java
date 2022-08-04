@@ -1,6 +1,5 @@
 package com.example.mailService.domain.dto;
 
-import com.example.mailService.domain.entity.Mail;
 import com.example.mailService.domain.entity.MailFile;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,8 +26,6 @@ public class MailDto {
         private LocalDateTime dateTimeSend;
 
         private LocalDateTime dateTimeReceive;
-
-        private List<MailFile> mailFiles = new ArrayList<>();
     }
 
     @Builder
