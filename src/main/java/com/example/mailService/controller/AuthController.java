@@ -29,7 +29,7 @@ public class AuthController {
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        loginDto.getEmail(),
+                        loginDto.getUsername(),
                         loginDto.getPassword()
                 )
         );

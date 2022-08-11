@@ -11,6 +11,7 @@ import java.util.List;
 @Getter
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class User {
 
