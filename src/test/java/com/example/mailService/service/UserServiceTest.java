@@ -62,37 +62,4 @@ class UserServiceTest {
         Assertions.assertEquals(user.getId(), userId);
         Assertions.assertThrows(UsernameNotFoundException.class, () -> userService.loadUserById(9999999L));
     }
-
-    @Test
-    public void UserService_registerUser_SUCCESS() throws Exception {
-        // given
-        UserSignUpDto signUpDto = UserSignUpDto.builder()
-                .username("signUpUser")
-                .email("signup@test.com")
-                .password("testPassword")
-                .build();
-
-        // when
-        User signUpUser = userService.registerUser(signUpDto);
-
-        // then
-        Assertions.assertEquals(signUpUser.getUsername(), signUpDto.getUsername());
-        Assertions.assertEquals(signUpUser.getEmail(), signUpDto.getEmail());
-        Assertions.assertNotEquals(signUpUser.getPassword(), signUpDto.getPassword());
-    }
-
-    @Test
-    public void UserService_registerUser_FAIL() throws Exception {
-        // given
-        UserSignUpDto duplicateSignUpDto = UserSignUpDto.builder()
-                .username("signUpUser")
-                .email("test@test.com")
-                .password("testPassword")
-                .build();
-
-        // when
-
-        // then
-        Assertions.assertThrows(UserAlreadyExistsException.class, () -> userService.registerUser(duplicateSignUpDto));
-    }
 }

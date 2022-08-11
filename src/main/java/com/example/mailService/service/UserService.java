@@ -34,21 +34,4 @@ public class UserService {
         return userRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + id));
     }
-
-    public User registerUser(UserSignUpDto signUpDto) throws UserAlreadyExistsException {
-        Optional<User> existingUser = userRepository.findByEmail(signUpDto.getEmail());
-        if (existingUser.isPresent()) {
-            throw new UserAlreadyExistsException("User already exists with email: " + signUpDto.getEmail());
-        } else {
-            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
-            User newUser = User.builder()
-                    .username(signUpDto.getUsername())
-                    .email(signUpDto.getEmail())
-                    .password(passwordEncoder.encode(signUpDto.getPassword()))
-                    .build();
-
-            return userRepository.save(newUser);
-        }
-    }
 }
