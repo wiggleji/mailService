@@ -16,12 +16,14 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
+@Transactional(readOnly = true)
 public class AuthService {
 
     private final AuthenticationManager authenticationManager;
@@ -50,6 +52,7 @@ public class AuthService {
         } return null;
     }
 
+    @Transactional(readOnly = false)
     public User registerUser(UserSignUpDto signUpDto) throws UserAlreadyExistsException {
 
         Optional<User> existingUser = userRepository.findByEmail(signUpDto.getEmail());

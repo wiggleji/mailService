@@ -22,6 +22,10 @@ class UserServiceTest {
     @Autowired
     private UserRepository userRepository;
 
+    private final String USERNAME = "testUser";
+    private final String EMAIL = "test@test.com";
+    private final String PASSWORD = "test1234";
+
     @BeforeEach
     private void beforeEach() {
         // TODO: @BeforeAll 와 같이 테스트 데이터 setup 을 한번으로 끝낼 수는 없을까?
@@ -29,9 +33,9 @@ class UserServiceTest {
         userService = new UserService(userRepository);
 
         User testUser = User.builder()
-                .username("testUser")
-                .email("test@test.com")
-                .password(passwordEncoder.encode("testPassword"))
+                .username(USERNAME)
+                .email(EMAIL)
+                .password(passwordEncoder.encode(PASSWORD))
                 .build();
         userRepository.save(testUser);
     }
@@ -39,21 +43,20 @@ class UserServiceTest {
     @Test
     public void UserService_loadUserByEmail() throws Exception {
         // given
-        String email = "test@test.com";
         String emailNotExists = "no@exist.com";
 
         // when
-        User user = userService.loadUserByEmail(email);
+        User user = userService.loadUserByEmail(EMAIL);
 
         // then
-        Assertions.assertEquals(user.getEmail(), email);
+        Assertions.assertEquals(user.getEmail(), EMAIL);
         Assertions.assertThrows(UsernameNotFoundException.class, () -> userService.loadUserByEmail(emailNotExists));
     }
 
     @Test
     public void UserService_loadUserById() throws Exception {
         // given
-        Long userId = userRepository.findByEmail("test@test.com").get().getId();
+        Long userId = userRepository.findByEmail(EMAIL).get().getId();
 
         // when
         User user = userService.loadUserById(userId);

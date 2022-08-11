@@ -2,28 +2,74 @@ package com.example.mailService.service;
 
 import com.example.mailService.domain.dto.UserSignUpDto;
 import com.example.mailService.domain.entity.User;
+import com.example.mailService.domain.entity.UserRole;
 import com.example.mailService.exception.UserAlreadyExistsException;
+import com.example.mailService.repository.UserRepository;
+import com.example.mailService.security.JwtTokenProvider;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@Transactional
 class AuthServiceTest {
 
     @Autowired
-    private static AuthService authService;
+    private AuthService authService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    private final String USERNAME = "testUser";
+    private final String EMAIL = "test@test.com";
+    private final String PASSWORD = "test1234";
+
+    private UserSignUpDto testUserSignUpDto() {
+        return UserSignUpDto.builder()
+                .username(USERNAME)
+                .email(EMAIL)
+                .password(PASSWORD)
+                .build();
+    }
+
+    private UserSignUpDto testUserSignUpDto(String username, String email) {
+        return UserSignUpDto.builder()
+                .username(username)
+                .email(email)
+                .password(PASSWORD)
+                .build();
+    }
+
+    @BeforeEach
+    private void beforeEach() {
+        // TODO: @BeforeAll 와 같이 테스트 데이터 setup 을 한번으로 끝낼 수는 없을까?
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+        userService = new UserService(userRepository);
+
+        User testUser = User.builder()
+                .username(USERNAME)
+                .email(EMAIL)
+                .password(passwordEncoder.encode(PASSWORD))
+                .build();
+        userRepository.save(testUser);
+    }
 
     @Test
     public void UserService_registerUser_SUCCESS() throws Exception {
         // given
-        UserSignUpDto signUpDto = UserSignUpDto.builder()
-                .username("signUpUser")
-                .email("signup@test.com")
-                .password("testPassword")
-                .build();
+        UserSignUpDto signUpDto = testUserSignUpDto("newUser", "new@test.com");
 
         // when
         User signUpUser = authService.registerUser(signUpDto);
@@ -38,9 +84,9 @@ class AuthServiceTest {
     public void UserService_registerUser_FAIL() throws Exception {
         // given
         UserSignUpDto duplicateSignUpDto = UserSignUpDto.builder()
-                .username("signUpUser")
-                .email("test@test.com")
-                .password("testPassword")
+                .username(USERNAME)
+                .email(EMAIL)
+                .password(PASSWORD)
                 .build();
 
         // when
