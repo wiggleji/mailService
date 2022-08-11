@@ -1,12 +1,11 @@
 package com.example.mailService.exception;
 
 public class UserAlreadyExistsException extends RuntimeException {
-
     public UserAlreadyExistsException(String message) {
         super(message);
     }
 
-    public UserAlreadyExistsException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    protected UserAlreadyExistsException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }

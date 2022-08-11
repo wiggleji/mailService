@@ -1,5 +1,5 @@
 package com.example.mailService.domain.entity;
 
-public enum Folder {
-    INBOX, OUTBOX, SPAM
+public enum UserRole {
+    ROLE_ADMIN, ROLE_USER
 }
