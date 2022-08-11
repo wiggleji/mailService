@@ -6,21 +6,19 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
 @Entity
-public class User extends BaseEntity {
+public class User {
 
     @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(nullable = false)
     private String username;
 
     @Column(unique = true, nullable = false)
@@ -28,4 +26,7 @@ public class User extends BaseEntity {
 
     @Column(nullable = false)
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
 }
