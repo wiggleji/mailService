@@ -2,6 +2,7 @@ package com.example.mailService.service;
 
 import com.example.mailService.domain.dto.UserSignUpDto;
 import com.example.mailService.domain.entity.User;
+import com.example.mailService.domain.entity.UserRole;
 import com.example.mailService.exception.UserAlreadyExistsException;
 import com.example.mailService.repository.UserRepository;
 import org.junit.jupiter.api.Assertions;
@@ -36,6 +37,7 @@ class UserServiceTest {
                 .username(USERNAME)
                 .email(EMAIL)
                 .password(passwordEncoder.encode(PASSWORD))
+                .role(UserRole.ROLE_USER)
                 .build();
         userRepository.save(testUser);
     }

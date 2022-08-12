@@ -6,7 +6,6 @@ import com.example.mailService.domain.dto.UserLoginDto;
 import com.example.mailService.domain.dto.UserSignUpDto;
 import com.example.mailService.domain.entity.User;
 import com.example.mailService.service.AuthService;
-import com.example.mailService.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

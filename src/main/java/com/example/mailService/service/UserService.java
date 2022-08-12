@@ -1,16 +1,10 @@
 package com.example.mailService.service;
 
-import com.example.mailService.domain.dto.UserSignUpDto;
 import com.example.mailService.domain.entity.User;
-import com.example.mailService.exception.UserAlreadyExistsException;
 import com.example.mailService.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)

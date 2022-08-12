@@ -1,17 +1,17 @@
 package com.example.mailService.service;
 
+import com.example.mailService.domain.dto.JwtTokenDto;
+import com.example.mailService.domain.dto.UserLoginDto;
 import com.example.mailService.domain.dto.UserSignUpDto;
 import com.example.mailService.domain.entity.User;
 import com.example.mailService.domain.entity.UserRole;
 import com.example.mailService.exception.UserAlreadyExistsException;
 import com.example.mailService.repository.UserRepository;
-import com.example.mailService.security.JwtTokenProvider;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -34,6 +34,21 @@ class AuthServiceTest {
     private final String USERNAME = "testUser";
     private final String EMAIL = "test@test.com";
     private final String PASSWORD = "test1234";
+
+
+    private UserLoginDto testUserLoginDto() {
+        return UserLoginDto.builder()
+                .username(USERNAME)
+                .password(PASSWORD)
+                .build();
+    }
+
+    private UserLoginDto testUserLoginDto(String username) {
+        return UserLoginDto.builder()
+                .username(username)
+                .password(PASSWORD)
+                .build();
+    }
 
     private UserSignUpDto testUserSignUpDto() {
         return UserSignUpDto.builder()
@@ -62,6 +77,7 @@ class AuthServiceTest {
                 .username(USERNAME)
                 .email(EMAIL)
                 .password(passwordEncoder.encode(PASSWORD))
+                .role(UserRole.ROLE_USER)
                 .build();
         userRepository.save(testUser);
     }
@@ -93,5 +109,28 @@ class AuthServiceTest {
 
         // then
         Assertions.assertThrows(UserAlreadyExistsException.class, () -> authService.registerUser(duplicateSignUpDto));
+    }
+
+    @Test
+    public void UserService_loginUser_SUCCESS() throws Exception {
+        // given
+        UserLoginDto loginDto = testUserLoginDto("WRONG_USERNAME");
+
+        // when
+
+        // then
+        assertNull(authService.loginUser(loginDto));
+    }
+
+    @Test
+    public void UserService_loginUser_FAIL() throws Exception {
+        // given
+        UserLoginDto loginDto = testUserLoginDto();
+
+        // when
+        JwtTokenDto jwtToken = authService.loginUser(loginDto);
+
+        // then
+        assertTrue(StringUtils.hasText(jwtToken.getToken()));
     }
 }
