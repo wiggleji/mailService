@@ -1,6 +1,7 @@
 package com.example.mailService;
 
 import com.example.mailService.domain.entity.User;
+import com.example.mailService.domain.entity.UserRole;
 import com.example.mailService.repository.UserRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,24 +12,28 @@ import javax.annotation.PostConstruct;
 @SpringBootApplication
 public class MailServiceApplication {
 
-	private final UserRepository repository;
+	private final UserRepository userRepository;
 
 	private final PasswordEncoder passwordEncoder;
 
-	public MailServiceApplication(UserRepository repository, PasswordEncoder passwordEncoder) {
-		this.repository = repository;
+	public MailServiceApplication(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
 	}
 
 	@PostConstruct
 	public void initUsers() {
-		User user = User.builder()
-				.username("admin")
-				.email("admin@social.com")
-				.password(passwordEncoder.encode("test1234"))
-				.build();
+		userRepository.findByUsername("admin").orElseGet(() -> {
+			User user = User.builder()
+					.username("admin")
+					.email("admin@social.com")
+					.password(passwordEncoder.encode("test1234"))
+					.role(UserRole.ROLE_ADMIN)
+					.build();
 
-		repository.save(user);
+			userRepository.save(user);
+			return user;
+		});
 	}
 
 	public static void main(String[] args) {
