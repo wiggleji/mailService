@@ -1,25 +1,28 @@
-package com.example.mailService.service;
+package com.example.mailService.controller;
 
-import com.example.mailService.domain.dto.UserSignUpDto;
+import com.example.mailService.domain.dto.UserDto;
 import com.example.mailService.domain.entity.User;
 import com.example.mailService.domain.entity.UserRole;
-import com.example.mailService.exception.UserAlreadyExistsException;
 import com.example.mailService.repository.UserRepository;
-import org.junit.jupiter.api.Assertions;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-class UserServiceTest {
+class UserControllerTest {
 
-    private static UserService userService;
+    @Autowired
+    private UserController userController;
+
     @Autowired
     private UserRepository userRepository;
 
@@ -31,7 +34,6 @@ class UserServiceTest {
     private void beforeEach() {
         // TODO: @BeforeAll 와 같이 테스트 데이터 setup 을 한번으로 끝낼 수는 없을까?
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        userService = new UserService(userRepository);
 
         User testUser = User.builder()
                 .username(USERNAME)
@@ -43,28 +45,15 @@ class UserServiceTest {
     }
 
     @Test
-    public void UserService_loadUserByEmail() throws Exception {
+    @WithMockUser(username = USERNAME, password = PASSWORD)
+    public void testUserControllerUserSelfDetail_SUCCESS() throws Exception {
         // given
-        String emailNotExists = "no@exist.com";
+        UserDto loginUserDto = userController.userSelfDetail();
 
         // when
-        User user = userService.loadUserByEmail(EMAIL);
 
         // then
-        Assertions.assertEquals(user.getEmail(), EMAIL);
-        Assertions.assertThrows(UsernameNotFoundException.class, () -> userService.loadUserByEmail(emailNotExists));
-    }
-
-    @Test
-    public void UserService_loadUserById() throws Exception {
-        // given
-        Long userId = userRepository.findByEmail(EMAIL).get().getId();
-
-        // when
-        User user = userService.loadUserById(userId);
-
-        // then
-        Assertions.assertEquals(user.getId(), userId);
-        Assertions.assertThrows(UsernameNotFoundException.class, () -> userService.loadUserById(9999999L));
+        Assertions.assertThat(loginUserDto.getUsername()).isEqualTo(USERNAME);
+        Assertions.assertThat(loginUserDto.getEmail()).isEqualTo(EMAIL);
     }
 }

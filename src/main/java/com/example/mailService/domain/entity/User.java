@@ -6,11 +6,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Getter
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class User {
 
@@ -28,5 +28,5 @@ public class User {
     private String password;
 
     @Enumerated(EnumType.STRING)
-    private UserRole role;
+    private UserRole role = UserRole.ROLE_USER;
 }
