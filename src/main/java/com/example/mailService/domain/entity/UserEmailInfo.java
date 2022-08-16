@@ -12,7 +12,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class UserEmailInfo {
+public class UserEmailInfo extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

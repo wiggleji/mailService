@@ -1,31 +1,20 @@
-package com.example.mailService.domain.entity;
+package com.example.mailService.domain.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Column;
 import java.time.LocalDateTime;
 
 @Getter
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
-@Entity
-public class Email extends BaseEntity {
+public class EmailDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(nullable = false)
-    private Long userId;
-
-    @Column(nullable = false)
     private String emailFrom;
 
-    @Column(nullable = false)
     private String emailTo;
 
     private String emailToList;
@@ -34,7 +23,6 @@ public class Email extends BaseEntity {
 
     private String emailBccList;
 
-    @Column(nullable = false)
     private String subject;
 
     private String content;
