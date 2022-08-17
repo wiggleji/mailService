@@ -21,8 +21,7 @@ public class UserController {
     public UserDto userSelfDetail() {
         // TODO: SecurityContextHolder 에서 유저 정보 조회
         // https://docs.spring.io/spring-security/site/docs/4.2.x/reference/html/test-method.html
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = userService.loadUserByUsername(userDetails.getUsername());
+        User user = userService.loadUserFromSecurityContextHolder();
         return UserDto.from(user);
     }
 }

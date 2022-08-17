@@ -9,4 +9,6 @@ import java.util.Optional;
 public interface EmailRepository extends JpaRepository<Email, Long> {
 
     List<Email> findEmailsByUserId(Long userId);
+
+    Optional<Email> findEmailById(Long mailId);
 }

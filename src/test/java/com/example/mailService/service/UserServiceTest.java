@@ -1,5 +1,6 @@
 package com.example.mailService.service;
 
+import com.example.mailService.base.CustomTestSetup;
 import com.example.mailService.domain.dto.UserSignUpDto;
 import com.example.mailService.domain.entity.User;
 import com.example.mailService.domain.entity.UserRole;
@@ -17,30 +18,10 @@ import javax.transaction.Transactional;
 
 @SpringBootTest
 @Transactional
-class UserServiceTest {
+class UserServiceTest extends CustomTestSetup {
 
-    private static UserService userService;
     @Autowired
-    private UserRepository userRepository;
-
-    private final String USERNAME = "testUser";
-    private final String EMAIL = "test@test.com";
-    private final String PASSWORD = "test1234";
-
-    @BeforeEach
-    private void beforeEach() {
-        // TODO: @BeforeAll 와 같이 테스트 데이터 setup 을 한번으로 끝낼 수는 없을까?
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        userService = new UserService(userRepository);
-
-        User testUser = User.builder()
-                .username(USERNAME)
-                .email(EMAIL)
-                .password(passwordEncoder.encode(PASSWORD))
-                .role(UserRole.ROLE_USER)
-                .build();
-        userRepository.save(testUser);
-    }
+    private UserService userService;
 
     @Test
     public void UserService_loadUserByEmail() throws Exception {

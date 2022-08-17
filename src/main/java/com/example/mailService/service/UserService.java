@@ -3,6 +3,8 @@ package com.example.mailService.service;
 import com.example.mailService.domain.dto.UserSignUpDto;
 import com.example.mailService.domain.entity.User;
 import com.example.mailService.repository.UserRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -38,6 +40,11 @@ public class UserService {
     public User loadUserById(Long id) throws UsernameNotFoundException {
         return userRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + id));
+    }
+
+    public User loadUserFromSecurityContextHolder() {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return loadUserByUsername(userDetails.getUsername());
     }
 
     public User createUser(UserSignUpDto signUpDto) {

@@ -1,5 +1,6 @@
 package com.example.mailService.controller;
 
+import com.example.mailService.base.CustomTestSetup;
 import com.example.mailService.domain.dto.UserDto;
 import com.example.mailService.domain.dto.UserLoginDto;
 import com.example.mailService.domain.dto.UserSignUpDto;
@@ -21,17 +22,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-class AuthControllerTest {
+class AuthControllerTest extends CustomTestSetup {
 
     @Autowired
     private AuthController authController;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    private final String USERNAME = "testUser";
-    private final String EMAIL = "test@test.com";
-    private final String PASSWORD = "test1234";
 
     private UserLoginDto testUserLoginDto() {
         return UserLoginDto.builder()
@@ -61,20 +55,6 @@ class AuthControllerTest {
                 .email(email)
                 .password(PASSWORD)
                 .build();
-    }
-
-    @BeforeEach
-    private void beforeEach() {
-        // TODO: @BeforeAll 와 같이 테스트 데이터 setup 을 한번으로 끝낼 수는 없을까?
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
-        User testUser = User.builder()
-                .username(USERNAME)
-                .email(EMAIL)
-                .password(passwordEncoder.encode(PASSWORD))
-                .role(UserRole.ROLE_USER)
-                .build();
-        userRepository.save(testUser);
     }
 
     @Test
