@@ -16,11 +16,13 @@ public abstract class CustomTestSetup {
     protected final String EMAIL = "test@test.com";
     protected final String PASSWORD = "test1234";
 
+    protected User testUser;
+
     @BeforeEach
     void beforeEach() {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-        User testUser = User.builder()
+        testUser = User.builder()
                 .username(USERNAME)
                 .email(EMAIL)
                 .password(passwordEncoder.encode(PASSWORD))
