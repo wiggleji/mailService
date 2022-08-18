@@ -1,4 +1,4 @@
-package com.example.mailService.domain.entity;
+package com.example.mailService.user.entity;
 
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedBy;

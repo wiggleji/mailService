@@ -1,37 +1,25 @@
 package com.example.mailService.controller;
 
-import com.example.mailService.domain.dto.UserDto;
-import com.example.mailService.domain.dto.UserLoginDto;
-import com.example.mailService.domain.dto.UserSignUpDto;
-import com.example.mailService.domain.entity.User;
-import com.example.mailService.domain.entity.UserRole;
+import com.example.mailService.base.BaseTestSetup;
+import com.example.mailService.user.controller.AuthController;
+import com.example.mailService.user.dto.UserDto;
+import com.example.mailService.user.dto.UserLoginDto;
+import com.example.mailService.user.dto.UserSignUpDto;
 import com.example.mailService.exception.UserAlreadyExistsException;
-import com.example.mailService.repository.UserRepository;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-class AuthControllerTest {
+class AuthControllerTest extends BaseTestSetup {
 
     @Autowired
     private AuthController authController;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    private final String USERNAME = "testUser";
-    private final String EMAIL = "test@test.com";
-    private final String PASSWORD = "test1234";
 
     private UserLoginDto testUserLoginDto() {
         return UserLoginDto.builder()
@@ -61,20 +49,6 @@ class AuthControllerTest {
                 .email(email)
                 .password(PASSWORD)
                 .build();
-    }
-
-    @BeforeEach
-    private void beforeEach() {
-        // TODO: @BeforeAll 와 같이 테스트 데이터 setup 을 한번으로 끝낼 수는 없을까?
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
-        User testUser = User.builder()
-                .username(USERNAME)
-                .email(EMAIL)
-                .password(passwordEncoder.encode(PASSWORD))
-                .role(UserRole.ROLE_USER)
-                .build();
-        userRepository.save(testUser);
     }
 
     @Test
