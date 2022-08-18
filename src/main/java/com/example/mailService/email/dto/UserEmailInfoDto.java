@@ -1,6 +1,6 @@
 package com.example.mailService.email.dto;
 
-import com.example.mailService.email.entity.UserEmailInfo;
+import com.example.mailService.email.entity.EmailMetadata;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -19,13 +19,13 @@ public class UserEmailInfoDto {
 
     private Long smtpPort;
 
-    public static UserEmailInfoDto from(UserEmailInfo userEmailInfo) {
+    public static UserEmailInfoDto from(EmailMetadata emailMetadata) {
         return UserEmailInfoDto.builder()
-                .id(userEmailInfo.getId())
-                .email(userEmailInfo.getEmail())
-                .password(userEmailInfo.getPassword())
-                .smtpHost(userEmailInfo.getSmtpHost())
-                .smtpPort(userEmailInfo.getSmtpPort())
+                .id(emailMetadata.getId())
+                .email(emailMetadata.getEmail())
+                .password(emailMetadata.getPassword())
+                .smtpHost(emailMetadata.getSmtpHost())
+                .smtpPort(emailMetadata.getSmtpPort())
                 .build();
     }
 }

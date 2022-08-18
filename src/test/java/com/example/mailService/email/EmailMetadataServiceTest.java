@@ -3,8 +3,7 @@ package com.example.mailService.email;
 import com.example.mailService.base.BaseTestSetup;
 import com.example.mailService.email.dto.UserEmailInfoCreateDto;
 import com.example.mailService.user.entity.User;
-import com.example.mailService.email.entity.UserEmailInfo;
-import com.example.mailService.email.UserEmailInfoService;
+import com.example.mailService.email.entity.EmailMetadata;
 import com.example.mailService.exception.ResourceAlreadyExistException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -18,10 +17,10 @@ import java.util.List;
 
 @SpringBootTest
 @Transactional
-class UserEmailInfoServiceTest extends BaseTestSetup {
+class EmailMetadataServiceTest extends BaseTestSetup {
 
     @Autowired
-    private UserEmailInfoService userEmailInfoService;
+    private EmailMetadataService emailMetadataService;
 
     private UserEmailInfoCreateDto createTestDto(String email, User user) {
         return UserEmailInfoCreateDto.builder()
@@ -41,15 +40,15 @@ class UserEmailInfoServiceTest extends BaseTestSetup {
         UserEmailInfoCreateDto createDto = createTestDto("test@testEmail.com", testUser);
 
         // when
-        UserEmailInfo userEmailInfo = userEmailInfoService.createUserEmailInfo(createDto);
-        UserEmailInfo retrieveUserEmailInfo = userEmailInfoService.loadUserEmailInfoById(userEmailInfo.getId());
+        EmailMetadata emailMetadata = emailMetadataService.createUserEmailInfo(createDto);
+        EmailMetadata retrieveEmailMetadata = emailMetadataService.loadUserEmailInfoById(emailMetadata.getId());
 
         // then
-        Assertions.assertThat(userEmailInfo.getEmail()).isEqualTo("test@testEmail.com");
-        Assertions.assertThat(userEmailInfo.getUser()).isEqualTo(testUser);
+        Assertions.assertThat(emailMetadata.getEmail()).isEqualTo("test@testEmail.com");
+        Assertions.assertThat(emailMetadata.getUser()).isEqualTo(testUser);
 
-        Assertions.assertThat(retrieveUserEmailInfo.getUser()).isEqualTo(testUser);
-        Assertions.assertThat(retrieveUserEmailInfo.getId()).isEqualTo(userEmailInfo.getId());
+        Assertions.assertThat(retrieveEmailMetadata.getUser()).isEqualTo(testUser);
+        Assertions.assertThat(retrieveEmailMetadata.getId()).isEqualTo(emailMetadata.getId());
     }
 
     @Test
@@ -60,13 +59,13 @@ class UserEmailInfoServiceTest extends BaseTestSetup {
         UserEmailInfoCreateDto createDto2 = createTestDto("test2@testEmail.com", testUser);
 
         // when
-        UserEmailInfo userEmailInfo1 = userEmailInfoService.createUserEmailInfo(createDto1);
-        UserEmailInfo userEmailInfo2 = userEmailInfoService.createUserEmailInfo(createDto2);
+        EmailMetadata emailMetadata1 = emailMetadataService.createUserEmailInfo(createDto1);
+        EmailMetadata emailMetadata2 = emailMetadataService.createUserEmailInfo(createDto2);
 
         // then
-        List<UserEmailInfo> emailInfoList = userEmailInfoService.loadUserEmailInfoListByUserId(testUser.getId());
+        List<EmailMetadata> emailInfoList = emailMetadataService.loadUserEmailInfoListByUserId(testUser.getId());
 
-        Assertions.assertThat(emailInfoList).isEqualTo(Arrays.asList(userEmailInfo1, userEmailInfo2));
+        Assertions.assertThat(emailInfoList).isEqualTo(Arrays.asList(emailMetadata1, emailMetadata2));
     }
 
     @Test
@@ -81,7 +80,7 @@ class UserEmailInfoServiceTest extends BaseTestSetup {
         // when
 
         // then
-        org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () -> userEmailInfoService.createUserEmailInfo(wrongCreateDto));
+        org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () -> emailMetadataService.createUserEmailInfo(wrongCreateDto));
     }
 
     @Test
@@ -90,9 +89,9 @@ class UserEmailInfoServiceTest extends BaseTestSetup {
         // given
         UserEmailInfoCreateDto duplicateCreateDto = createTestDto("test@testEmail.com", testUser);
         // when
-        UserEmailInfo userEmailInfo = userEmailInfoService.createUserEmailInfo(duplicateCreateDto);
+        EmailMetadata emailMetadata = emailMetadataService.createUserEmailInfo(duplicateCreateDto);
 
         // then
-        org.junit.jupiter.api.Assertions.assertThrows(ResourceAlreadyExistException.class, () -> userEmailInfoService.createUserEmailInfo(duplicateCreateDto));
+        org.junit.jupiter.api.Assertions.assertThrows(ResourceAlreadyExistException.class, () -> emailMetadataService.createUserEmailInfo(duplicateCreateDto));
     }
 }

@@ -2,7 +2,7 @@ package com.example.mailService.email;
 
 import com.example.mailService.email.dto.UserEmailInfoCreateDto;
 import com.example.mailService.user.entity.User;
-import com.example.mailService.email.entity.UserEmailInfo;
+import com.example.mailService.email.entity.EmailMetadata;
 import com.example.mailService.exception.ResourceAlreadyExistException;
 import com.example.mailService.exception.ResourceNotFoundException;
 import com.example.mailService.repository.UserEmailInfoRepository;
@@ -17,7 +17,7 @@ import java.util.Optional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class UserEmailInfoService {
+public class EmailMetadataService {
 
     private final UserEmailInfoRepository userEmailInfoRepository;
 
@@ -25,18 +25,18 @@ public class UserEmailInfoService {
 
     // 유저 메일정보 조회 / 생성
 
-    public List<UserEmailInfo> loadUserEmailInfoListByUserId(Long userId) {
+    public List<EmailMetadata> loadUserEmailInfoListByUserId(Long userId) {
         return userEmailInfoRepository.findAllByUser_Id(userId);
     }
 
-    public UserEmailInfo loadUserEmailInfoById(Long userEmailInfoId) {
+    public EmailMetadata loadUserEmailInfoById(Long userEmailInfoId) {
         return userEmailInfoRepository.findById(userEmailInfoId)
                 .orElseThrow(() -> new ResourceNotFoundException("UserEmailInfo not found by id: " + userEmailInfoId));
     }
 
-    public UserEmailInfo createUserEmailInfo(UserEmailInfoCreateDto createDto) {
+    public EmailMetadata createUserEmailInfo(UserEmailInfoCreateDto createDto) {
         User requestUser = userService.loadUserFromSecurityContextHolder();
-        Optional<UserEmailInfo> existingUserEmailInfo = userEmailInfoRepository.findByEmailAndUser_Id(createDto.getEmail(), requestUser.getId());
+        Optional<EmailMetadata> existingUserEmailInfo = userEmailInfoRepository.findByEmailAndUser_Id(createDto.getEmail(), requestUser.getId());
         if (!existingUserEmailInfo.isPresent() & createDto.getUser().equals(requestUser)) {
             return userEmailInfoRepository.save(createDto.toEntity());
         } else if (existingUserEmailInfo.isPresent()) {

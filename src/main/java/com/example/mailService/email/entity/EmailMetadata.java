@@ -14,7 +14,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class UserEmailInfo extends BaseEntity {
+public class EmailMetadata extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

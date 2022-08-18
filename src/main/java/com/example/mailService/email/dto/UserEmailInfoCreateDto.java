@@ -1,7 +1,7 @@
 package com.example.mailService.email.dto;
 
 import com.example.mailService.user.entity.User;
-import com.example.mailService.email.entity.UserEmailInfo;
+import com.example.mailService.email.entity.EmailMetadata;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -21,8 +21,8 @@ public class UserEmailInfoCreateDto {
 
     private User user;
 
-    public UserEmailInfo toEntity() {
-        return UserEmailInfo.builder()
+    public EmailMetadata toEntity() {
+        return EmailMetadata.builder()
                 .email(email)
                 .username(username)
                 .password(password)
