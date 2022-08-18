@@ -1,7 +1,8 @@
 package com.example.mailService.controller;
 
 import com.example.mailService.base.BaseTestSetup;
-import com.example.mailService.domain.dto.UserDto;
+import com.example.mailService.user.controller.UserController;
+import com.example.mailService.user.dto.UserDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,6 @@
 package com.example.mailService.repository;
 
-import com.example.mailService.domain.entity.Email;
+import com.example.mailService.email.entity.Email;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

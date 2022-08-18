@@ -1,9 +1,10 @@
 package com.example.mailService.controller;
 
 import com.example.mailService.base.BaseTestSetup;
-import com.example.mailService.domain.dto.UserDto;
-import com.example.mailService.domain.dto.UserLoginDto;
-import com.example.mailService.domain.dto.UserSignUpDto;
+import com.example.mailService.user.controller.AuthController;
+import com.example.mailService.user.dto.UserDto;
+import com.example.mailService.user.dto.UserLoginDto;
+import com.example.mailService.user.dto.UserSignUpDto;
 import com.example.mailService.exception.UserAlreadyExistsException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
