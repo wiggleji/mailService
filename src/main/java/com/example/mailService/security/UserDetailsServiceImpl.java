@@ -1,6 +1,6 @@
 package com.example.mailService.security;
 
-import com.example.mailService.domain.entity.User;
+import com.example.mailService.user.entity.User;
 import com.example.mailService.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -1,4 +1,4 @@
-package com.example.mailService.domain.dto;
+package com.example.mailService.user.dto;
 
 
 import lombok.Builder;

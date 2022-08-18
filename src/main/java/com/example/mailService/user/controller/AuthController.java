@@ -1,11 +1,11 @@
-package com.example.mailService.controller;
+package com.example.mailService.user.controller;
 
-import com.example.mailService.domain.dto.JwtTokenDto;
-import com.example.mailService.domain.dto.UserDto;
-import com.example.mailService.domain.dto.UserLoginDto;
-import com.example.mailService.domain.dto.UserSignUpDto;
-import com.example.mailService.domain.entity.User;
-import com.example.mailService.service.AuthService;
+import com.example.mailService.user.dto.JwtTokenDto;
+import com.example.mailService.user.dto.UserDto;
+import com.example.mailService.user.dto.UserLoginDto;
+import com.example.mailService.user.dto.UserSignUpDto;
+import com.example.mailService.user.entity.User;
+import com.example.mailService.user.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

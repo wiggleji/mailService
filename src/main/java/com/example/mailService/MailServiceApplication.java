@@ -1,7 +1,7 @@
 package com.example.mailService;
 
-import com.example.mailService.domain.entity.User;
-import com.example.mailService.domain.entity.UserRole;
+import com.example.mailService.user.entity.User;
+import com.example.mailService.user.entity.UserRole;
 import com.example.mailService.repository.UserRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,6 +1,6 @@
-package com.example.mailService.domain.dto;
+package com.example.mailService.user.dto;
 
-import com.example.mailService.domain.entity.User;
+import com.example.mailService.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,6 +16,6 @@ public class UserDto {
 
     public static UserDto from(User user) {
         // Entity to DTO
-        return new UserDto((user.getUsername()), user.getEmail());
+        return new UserDto(user.getUsername(), user.getEmail());
     }
 }
