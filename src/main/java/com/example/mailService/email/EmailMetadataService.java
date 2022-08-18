@@ -1,6 +1,6 @@
 package com.example.mailService.email;
 
-import com.example.mailService.email.dto.UserEmailInfoCreateDto;
+import com.example.mailService.email.dto.MailMetadataCreateDto;
 import com.example.mailService.user.entity.User;
 import com.example.mailService.email.entity.EmailMetadata;
 import com.example.mailService.exception.ResourceAlreadyExistException;
@@ -34,7 +34,7 @@ public class EmailMetadataService {
                 .orElseThrow(() -> new ResourceNotFoundException("UserEmailInfo not found by id: " + userEmailInfoId));
     }
 
-    public EmailMetadata createUserEmailInfo(UserEmailInfoCreateDto createDto) {
+    public EmailMetadata createUserEmailInfo(MailMetadataCreateDto createDto) {
         User requestUser = userService.loadUserFromSecurityContextHolder();
         Optional<EmailMetadata> existingUserEmailInfo = userEmailInfoRepository.findByEmailAndUser_Id(createDto.getEmail(), requestUser.getId());
         if (!existingUserEmailInfo.isPresent() & createDto.getUser().equals(requestUser)) {

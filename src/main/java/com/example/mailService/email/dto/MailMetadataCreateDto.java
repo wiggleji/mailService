@@ -7,7 +7,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class UserEmailInfoCreateDto {
+public class MailMetadataCreateDto {
 
     private String email;
 

@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class UserEmailInfoDto {
+public class MailMetadataDto {
     private Long id;
 
     private String email;
@@ -19,8 +19,8 @@ public class UserEmailInfoDto {
 
     private Long smtpPort;
 
-    public static UserEmailInfoDto from(EmailMetadata emailMetadata) {
-        return UserEmailInfoDto.builder()
+    public static MailMetadataDto from(EmailMetadata emailMetadata) {
+        return MailMetadataDto.builder()
                 .id(emailMetadata.getId())
                 .email(emailMetadata.getEmail())
                 .password(emailMetadata.getPassword())

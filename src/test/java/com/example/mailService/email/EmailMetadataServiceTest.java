@@ -1,7 +1,7 @@
 package com.example.mailService.email;
 
 import com.example.mailService.base.BaseTestSetup;
-import com.example.mailService.email.dto.UserEmailInfoCreateDto;
+import com.example.mailService.email.dto.MailMetadataCreateDto;
 import com.example.mailService.user.entity.User;
 import com.example.mailService.email.entity.EmailMetadata;
 import com.example.mailService.exception.ResourceAlreadyExistException;
@@ -22,8 +22,8 @@ class EmailMetadataServiceTest extends BaseTestSetup {
     @Autowired
     private EmailMetadataService emailMetadataService;
 
-    private UserEmailInfoCreateDto createTestDto(String email, User user) {
-        return UserEmailInfoCreateDto.builder()
+    private MailMetadataCreateDto createTestDto(String email, User user) {
+        return MailMetadataCreateDto.builder()
                 .email(email)
                 .username("testSMTP")
                 .password("testPassword")
@@ -37,7 +37,7 @@ class EmailMetadataServiceTest extends BaseTestSetup {
     @WithMockUser(username = USERNAME, password = PASSWORD)
     public void UserEmailInfoService_createUserEmailInfo__SUCCESS() throws Exception {
         // given
-        UserEmailInfoCreateDto createDto = createTestDto("test@testEmail.com", testUser);
+        MailMetadataCreateDto createDto = createTestDto("test@testEmail.com", testUser);
 
         // when
         EmailMetadata emailMetadata = emailMetadataService.createUserEmailInfo(createDto);
@@ -55,8 +55,8 @@ class EmailMetadataServiceTest extends BaseTestSetup {
     @WithMockUser(username = USERNAME, password = PASSWORD)
     public void UserEmailInfoService_loadUserEmailInfo__SUCCESS() throws Exception {
         // given
-        UserEmailInfoCreateDto createDto1 = createTestDto("test1@testEmail.com", testUser);
-        UserEmailInfoCreateDto createDto2 = createTestDto("test2@testEmail.com", testUser);
+        MailMetadataCreateDto createDto1 = createTestDto("test1@testEmail.com", testUser);
+        MailMetadataCreateDto createDto2 = createTestDto("test2@testEmail.com", testUser);
 
         // when
         EmailMetadata emailMetadata1 = emailMetadataService.createUserEmailInfo(createDto1);
@@ -72,7 +72,7 @@ class EmailMetadataServiceTest extends BaseTestSetup {
     @WithMockUser(username = USERNAME, password = PASSWORD)
     public void UserEmailInfoService_createUserEmailInfo__WRONG_USER() throws Exception {
         // given
-        UserEmailInfoCreateDto wrongCreateDto = createTestDto("test1@testEmail.com",
+        MailMetadataCreateDto wrongCreateDto = createTestDto("test1@testEmail.com",
                 User.builder()
                         .username("anotherUser").email("wrongUser@test.com").password("wrongPassword")
                         .build());
@@ -87,7 +87,7 @@ class EmailMetadataServiceTest extends BaseTestSetup {
     @WithMockUser(username = USERNAME, password = PASSWORD)
     public void UserEmailInfoService_createUserEmailInfo__DUPLICATE() throws Exception {
         // given
-        UserEmailInfoCreateDto duplicateCreateDto = createTestDto("test@testEmail.com", testUser);
+        MailMetadataCreateDto duplicateCreateDto = createTestDto("test@testEmail.com", testUser);
         // when
         EmailMetadata emailMetadata = emailMetadataService.createUserEmailInfo(duplicateCreateDto);
 

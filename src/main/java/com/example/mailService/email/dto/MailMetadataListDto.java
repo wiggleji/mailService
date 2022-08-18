@@ -5,12 +5,12 @@ import com.example.mailService.email.entity.EmailMetadata;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class UserEmailInfoListDto {
-    List<UserEmailInfoDto> userEmailInfoDtoList;
+public class MailMetadataListDto {
+    List<MailMetadataDto> mailMetadataDtoList;
 
-    public static List<UserEmailInfoDto> from(List<EmailMetadata> emailMetadata) {
+    public static List<MailMetadataDto> from(List<EmailMetadata> emailMetadata) {
         return emailMetadata.stream()
-                .map(UserEmailInfoDto::from)
+                .map(MailMetadataDto::from)
                 .collect(Collectors.toList());
     }
 }
