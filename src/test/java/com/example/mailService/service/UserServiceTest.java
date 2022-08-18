@@ -1,24 +1,18 @@
 package com.example.mailService.service;
 
-import com.example.mailService.base.CustomTestSetup;
-import com.example.mailService.domain.dto.UserSignUpDto;
+import com.example.mailService.base.BaseTestSetup;
 import com.example.mailService.domain.entity.User;
-import com.example.mailService.domain.entity.UserRole;
-import com.example.mailService.exception.UserAlreadyExistsException;
-import com.example.mailService.repository.UserRepository;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.transaction.Transactional;
 
 @SpringBootTest
 @Transactional
-class UserServiceTest extends CustomTestSetup {
+class UserServiceTest extends BaseTestSetup {
 
     @Autowired
     private UserService userService;

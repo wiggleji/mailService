@@ -1,11 +1,10 @@
 package com.example.mailService.service;
 
-import com.example.mailService.base.CustomTestSetup;
+import com.example.mailService.base.BaseTestSetup;
 import com.example.mailService.domain.dto.EmailCreateDto;
 import com.example.mailService.domain.entity.Email;
 import com.example.mailService.exception.ResourceNotFoundException;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,13 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-class EmailServiceTest extends CustomTestSetup {
+class EmailServiceTest extends BaseTestSetup {
 
     @Autowired
     private EmailService emailService;
@@ -41,17 +37,15 @@ class EmailServiceTest extends CustomTestSetup {
                 .emailTo("to@test.com")
                 .subject("testMailSubject2")
                 .build();
-        Long emailId1 = emailService.createEmail(testEmailDto1);
-        Long emailId2 = emailService.createEmail(testEmailDto2);
+        Email email1 = emailService.createEmail(testEmailDto1);
+        Email email2 = emailService.createEmail(testEmailDto2);
 
         // when
         List<Email> emailList = emailService.loadEmailListByUserId(testUser.getId());
 
-        List<Long> emailIdList = emailList.stream().map(Email::getId).collect(Collectors.toList());
-
         // then
         Assertions.assertThat(emailList.size()).isEqualTo(2);
-        Assertions.assertThat(emailIdList).isEqualTo(Arrays.asList(emailId1, emailId2));
+        Assertions.assertThat(emailList).isEqualTo(Arrays.asList(email1, email2));
     }
 
     @Test
@@ -64,13 +58,13 @@ class EmailServiceTest extends CustomTestSetup {
                 .emailTo("to@test.com")
                 .subject("testMailSubject1")
                 .build();
-        Long emailId = emailService.createEmail(testEmailDto1);
+        Email newEmail = emailService.createEmail(testEmailDto1);
 
         // when
-        Email email = emailService.loadEmailById(emailId);
+        Email email = emailService.loadEmailById(newEmail.getId());
 
         // then
-        Assertions.assertThat(email.getId()).isEqualTo(emailId);
+        Assertions.assertThat(email.getId()).isEqualTo(newEmail.getId());
     }
 
     @Test

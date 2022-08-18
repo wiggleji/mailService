@@ -5,6 +5,7 @@ import com.example.mailService.domain.entity.Email;
 import com.example.mailService.domain.entity.User;
 import com.example.mailService.exception.ResourceNotFoundException;
 import com.example.mailService.repository.EmailRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,16 +13,12 @@ import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class EmailService {
 
     private final EmailRepository emailRepository;
 
     private final UserService userService;
-
-    public EmailService(EmailRepository emailRepository, UserService userService) {
-        this.emailRepository = emailRepository;
-        this.userService = userService;
-    }
 
     public List<Email> loadEmailListByUserId(Long userId) {
         return emailRepository.findEmailsByUserId(userId);
@@ -33,11 +30,10 @@ public class EmailService {
         );
     }
 
-    public Long createEmail(EmailCreateDto createDto) {
+    public Email createEmail(EmailCreateDto createDto) {
         User requestUser = userService.loadUserFromSecurityContextHolder();
         if (createDto.getUserId().equals(requestUser.getId())) {
-            Email save = emailRepository.save(createDto.toEntity());
-            return save.getId();
+            return emailRepository.save(createDto.toEntity());
         } else throw new IllegalArgumentException("Request user is not equal. User: " + requestUser.getId() + ", Request:" + createDto.getUserId());
     }
 

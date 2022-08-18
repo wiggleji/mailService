@@ -1,6 +1,7 @@
 package com.example.mailService.domain.dto;
 
 import com.example.mailService.domain.entity.User;
+import com.example.mailService.domain.entity.UserEmailInfo;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -23,4 +24,15 @@ public class UserEmailInfoCreateDto {
     private Long smtpPort;
 
     private User user;
+
+    public UserEmailInfo toEntity() {
+        return UserEmailInfo.builder()
+                .email(email)
+                .username(username)
+                .password(password)
+                .smtpHost(smtpHost)
+                .smtpPort(smtpPort)
+                .user(user)
+                .build();
+    }
 }

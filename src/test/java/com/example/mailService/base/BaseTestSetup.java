@@ -7,7 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-public abstract class CustomTestSetup {
+public abstract class BaseTestSetup {
 
     @Autowired
     protected UserRepository userRepository;

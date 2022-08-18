@@ -14,7 +14,6 @@ import java.util.Properties;
 @Slf4j
 @Getter
 @Builder
-@Component
 @AllArgsConstructor
 public class MailUtils {
 
