@@ -25,16 +25,22 @@ public class EmailMetadataService {
 
     // 유저 메일정보 조회 / 생성
 
-    public List<EmailMetadata> loadUserEmailInfoListByUserId(Long userId) {
+    public List<EmailMetadata> loadEmailMetadataListByUserId(Long userId) {
         return userEmailInfoRepository.findAllByUser_Id(userId);
     }
 
-    public EmailMetadata loadUserEmailInfoById(Long userEmailInfoId) {
-        return userEmailInfoRepository.findById(userEmailInfoId)
-                .orElseThrow(() -> new ResourceNotFoundException("UserEmailInfo not found by id: " + userEmailInfoId));
+    public EmailMetadata loadEmailMetadataById(Long metadataId) {
+        return userEmailInfoRepository.findById(metadataId)
+                .orElseThrow(() -> new ResourceNotFoundException("EmailMetadata not found by id: " + metadataId));
     }
 
-    public EmailMetadata createUserEmailInfo(MailMetadataCreateDto createDto) {
+    public EmailMetadata loadEmailMetadataByEmailAndUserId(String email, Long userId) {
+        return userEmailInfoRepository.findByEmailAndUser_Id(email, userId)
+                .orElseThrow(() -> new ResourceNotFoundException("EmailMetadata not found by email & userId: " + email + userId));
+    }
+
+    public EmailMetadata createEmailMetadata(MailMetadataCreateDto createDto) {
+        // TODO: Java mail API 를 사용해서 유효한 메일 메타데이터 인지 검증해야함
         User requestUser = userService.loadUserFromSecurityContextHolder();
         Optional<EmailMetadata> existingUserEmailInfo = userEmailInfoRepository.findByEmailAndUser_Id(createDto.getEmail(), requestUser.getId());
         if (!existingUserEmailInfo.isPresent() & createDto.getUser().equals(requestUser)) {
