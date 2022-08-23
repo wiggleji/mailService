@@ -5,6 +5,7 @@ import com.example.mailService.email.dto.MailMetadataCreateDto;
 import com.example.mailService.user.entity.User;
 import com.example.mailService.email.entity.EmailMetadata;
 import com.example.mailService.exception.ResourceAlreadyExistException;
+import lombok.RequiredArgsConstructor;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +20,13 @@ import java.util.List;
 @Transactional
 class EmailMetadataServiceTest extends BaseTestSetup {
 
+//    @Autowired
+    private final EmailMetadataService emailMetadataService;
+
     @Autowired
-    private EmailMetadataService emailMetadataService;
+    public EmailMetadataServiceTest(EmailMetadataService emailMetadataService) {
+        this.emailMetadataService = emailMetadataService;
+    }
 
     private MailMetadataCreateDto createTestDto(String email, User user) {
         return MailMetadataCreateDto.builder()

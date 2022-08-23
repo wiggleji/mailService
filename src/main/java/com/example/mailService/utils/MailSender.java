@@ -1,35 +1,52 @@
 package com.example.mailService.utils;
 
+import com.example.mailService.email.EmailMetadataService;
+import com.example.mailService.email.dto.EmailCreateDto;
 import com.example.mailService.email.dto.EmailMessageDto;
+import com.example.mailService.email.entity.EmailMetadata;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.*;
 import javax.mail.internet.MimeMessage;
-import java.util.Optional;
 import java.util.Properties;
 
 @Slf4j
 @Getter
-@Builder
+@Component
 @AllArgsConstructor
 public class MailSender {
 
-    private final String username;
-    private final String password;
-    private final String smtpHost;
-    private final Long smtpPort;
+    private final EmailMetadataService metadataService;
 
-    private final Properties properties;
-    
-    public Session generateMailSession() {
-        // 메일 전송을 위한 메일세션
+    @Transactional
+    public void sendMailByEmailCreateDto(EmailCreateDto createDto) throws MessagingException {
+        try {
+            // EmailCreateDto 로부터 metadata 조회
+            EmailMetadata metadata = metadataService.loadEmailMetadataByEmailAndUserId(createDto.getEmailFrom(), createDto.getUserId());
+            // Java Mail API session/message 생성
+            Session session = generateMailSession(metadata);
+            Message message = generateMessage(session, createDto.toEmailMessageDto());
+
+            // 메일 전송
+            sendMessage(message);
+
+        } catch (MessagingException e) {
+            log.error("Error while sending message from EmailCreateDto: " + createDto);
+            throw e;
+        }
+    }
+
+    public Session generateMailSession(EmailMetadata metadata) {
+        // 메일 전송을 위한 메일세션 생성
+        Properties properties = metadataService.generateEmailMetadataProperty(metadata);
         return Session.getDefaultInstance(properties, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(username, password);
+                return new PasswordAuthentication(metadata.getUsername(), metadata.getPassword());
             }
         });
     }
@@ -41,7 +58,7 @@ public class MailSender {
      * @param emailMessageDto: com.example.mailService.email.dto.EmailMessageDto 메일 전소에 필요한 Java Mail API 데이터 형을 갖춘 DTO
      * @return javax.mail.Message 메일 메시지 인스턴스
      */
-    public Optional<Message> generateMessage(
+    public Message generateMessage(
             Session session,
             EmailMessageDto emailMessageDto
     ) throws MessagingException {
@@ -56,7 +73,7 @@ public class MailSender {
             message.setSubject(emailMessageDto.getSubject());
             message.setText(emailMessageDto.getText());
 
-            return Optional.of(message);
+            return message;
         } catch (MessagingException e) {
             log.error("Error while creating message from session: " + session);
             throw new MessagingException(e.getMessage());
@@ -67,12 +84,13 @@ public class MailSender {
      * 메일 전송.
      * @param message: javax.mail.Message 전송할 메일 메시지
      */
-    public void sendMessage(Message message) {
+    public void sendMessage(Message message) throws MessagingException {
         try {
             Transport.send(message);
         } catch (MessagingException e) {
             log.error("Error while sending message: " + message);
-            throw new RuntimeException(e);
+            throw new MessagingException(e.getMessage());
         }
     }
+
 }

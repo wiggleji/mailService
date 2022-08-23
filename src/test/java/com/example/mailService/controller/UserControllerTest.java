@@ -14,8 +14,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 class UserControllerTest extends BaseTestSetup {
 
+    private final UserController userController;
+
     @Autowired
-    private UserController userController;
+    public UserControllerTest(UserController userController) {
+        this.userController = userController;
+    }
 
     @Test
     @WithMockUser(username = USERNAME, password = PASSWORD)

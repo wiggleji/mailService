@@ -19,7 +19,7 @@ public abstract class BaseTestSetup {
     protected User testUser;
 
     @BeforeEach
-    void beforeEach() {
+    protected void beforeEach() {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
         testUser = User.builder()
