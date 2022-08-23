@@ -90,7 +90,6 @@ class EmailSendServiceTest extends BaseTestSetup {
         // MailSender.sendMessage 는 mock 처리 (doNothing)
         // MailSender.sendMailByEmailCreateDto 를 포함한 그 외는 정상처리 (SpyBean)
         doNothing().when(mailSender).sendMessage(any(Message.class));
-        doCallRealMethod().when(mailSender).sendMessage(any(Message.class));
 
         // when
         Email email = emailSendService.sendEmail(testEmailCreateDto());
