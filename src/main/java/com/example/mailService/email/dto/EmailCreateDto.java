@@ -4,6 +4,9 @@ import com.example.mailService.email.entity.Email;
 import lombok.Builder;
 import lombok.Getter;
 
+import javax.mail.Address;
+import javax.mail.MessagingException;
+import javax.mail.internet.InternetAddress;
 import java.time.LocalDateTime;
 
 @Getter
@@ -24,7 +27,7 @@ public class EmailCreateDto {
 
     private String subject;
 
-    private String content;
+    private String text;
 
     private LocalDateTime dateTimeSend;
 
@@ -39,9 +42,24 @@ public class EmailCreateDto {
                 .emailCcList(emailCcList)
                 .emailBccList(emailBccList)
                 .subject(subject)
-                .content(content)
+                .content(text)
                 .dateTimeSend(dateTimeSend)
                 .dateTimeReceive(dateTimeReceive)
+                .build();
+    }
+
+    public EmailMessageDto toEmailMessageDto() throws MessagingException {
+        Address[] addressesTo = InternetAddress.parse(getEmailToList());
+        Address[] addressesCc = InternetAddress.parse(getEmailCcList());
+        Address[] addressesBcc = InternetAddress.parse(getEmailBccList());
+
+        return EmailMessageDto.builder()
+                .addressFrom(new InternetAddress(getEmailFrom()))
+                .addressTo(addressesTo)
+                .addressCc(addressesCc)
+                .addressBcc(addressesBcc)
+                .subject(getSubject())
+                .text(getText())
                 .build();
     }
 }

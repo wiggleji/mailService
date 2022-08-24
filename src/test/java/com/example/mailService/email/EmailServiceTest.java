@@ -19,8 +19,12 @@ import java.util.List;
 @Transactional
 class EmailServiceTest extends BaseTestSetup {
 
+    private final EmailService emailService;
+
     @Autowired
-    private EmailService emailService;
+    public EmailServiceTest(EmailService emailService) {
+        this.emailService = emailService;
+    }
 
     @Test
     @WithMockUser(username = USERNAME, password = PASSWORD)

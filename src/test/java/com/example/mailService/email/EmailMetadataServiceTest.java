@@ -5,6 +5,7 @@ import com.example.mailService.email.dto.MailMetadataCreateDto;
 import com.example.mailService.user.entity.User;
 import com.example.mailService.email.entity.EmailMetadata;
 import com.example.mailService.exception.ResourceAlreadyExistException;
+import lombok.RequiredArgsConstructor;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +20,13 @@ import java.util.List;
 @Transactional
 class EmailMetadataServiceTest extends BaseTestSetup {
 
+//    @Autowired
+    private final EmailMetadataService emailMetadataService;
+
     @Autowired
-    private EmailMetadataService emailMetadataService;
+    public EmailMetadataServiceTest(EmailMetadataService emailMetadataService) {
+        this.emailMetadataService = emailMetadataService;
+    }
 
     private MailMetadataCreateDto createTestDto(String email, User user) {
         return MailMetadataCreateDto.builder()
@@ -40,8 +46,8 @@ class EmailMetadataServiceTest extends BaseTestSetup {
         MailMetadataCreateDto createDto = createTestDto("test@testEmail.com", testUser);
 
         // when
-        EmailMetadata emailMetadata = emailMetadataService.createUserEmailInfo(createDto);
-        EmailMetadata retrieveEmailMetadata = emailMetadataService.loadUserEmailInfoById(emailMetadata.getId());
+        EmailMetadata emailMetadata = emailMetadataService.createEmailMetadata(createDto);
+        EmailMetadata retrieveEmailMetadata = emailMetadataService.loadEmailMetadataById(emailMetadata.getId());
 
         // then
         Assertions.assertThat(emailMetadata.getEmail()).isEqualTo("test@testEmail.com");
@@ -59,11 +65,11 @@ class EmailMetadataServiceTest extends BaseTestSetup {
         MailMetadataCreateDto createDto2 = createTestDto("test2@testEmail.com", testUser);
 
         // when
-        EmailMetadata emailMetadata1 = emailMetadataService.createUserEmailInfo(createDto1);
-        EmailMetadata emailMetadata2 = emailMetadataService.createUserEmailInfo(createDto2);
+        EmailMetadata emailMetadata1 = emailMetadataService.createEmailMetadata(createDto1);
+        EmailMetadata emailMetadata2 = emailMetadataService.createEmailMetadata(createDto2);
 
         // then
-        List<EmailMetadata> emailInfoList = emailMetadataService.loadUserEmailInfoListByUserId(testUser.getId());
+        List<EmailMetadata> emailInfoList = emailMetadataService.loadEmailMetadataListByUserId(testUser.getId());
 
         Assertions.assertThat(emailInfoList).isEqualTo(Arrays.asList(emailMetadata1, emailMetadata2));
     }
@@ -80,7 +86,7 @@ class EmailMetadataServiceTest extends BaseTestSetup {
         // when
 
         // then
-        org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () -> emailMetadataService.createUserEmailInfo(wrongCreateDto));
+        org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () -> emailMetadataService.createEmailMetadata(wrongCreateDto));
     }
 
     @Test
@@ -89,9 +95,9 @@ class EmailMetadataServiceTest extends BaseTestSetup {
         // given
         MailMetadataCreateDto duplicateCreateDto = createTestDto("test@testEmail.com", testUser);
         // when
-        EmailMetadata emailMetadata = emailMetadataService.createUserEmailInfo(duplicateCreateDto);
+        EmailMetadata emailMetadata = emailMetadataService.createEmailMetadata(duplicateCreateDto);
 
         // then
-        org.junit.jupiter.api.Assertions.assertThrows(ResourceAlreadyExistException.class, () -> emailMetadataService.createUserEmailInfo(duplicateCreateDto));
+        org.junit.jupiter.api.Assertions.assertThrows(ResourceAlreadyExistException.class, () -> emailMetadataService.createEmailMetadata(duplicateCreateDto));
     }
 }

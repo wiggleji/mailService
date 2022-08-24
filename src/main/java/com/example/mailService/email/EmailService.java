@@ -31,6 +31,7 @@ public class EmailService {
         );
     }
 
+    @Transactional(readOnly = false)
     public Email createEmail(EmailCreateDto createDto) {
         User requestUser = userService.loadUserFromSecurityContextHolder();
         if (createDto.getUserId().equals(requestUser.getId())) {
@@ -38,6 +39,7 @@ public class EmailService {
         } else throw new IllegalArgumentException("Request user is not equal. User: " + requestUser.getId() + ", Request:" + createDto.getUserId());
     }
 
+    @Transactional(readOnly = false)
     public void deleteEmail(Long emailId) {
         // 메일은 수정이 존재하지 않음.
         // 조회 / 생성 / 삭제만 존재.

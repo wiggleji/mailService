@@ -15,8 +15,12 @@ import javax.transaction.Transactional;
 @Transactional
 class UserServiceTest extends BaseTestSetup {
 
+    private final UserService userService;
+
     @Autowired
-    private UserService userService;
+    public UserServiceTest(UserService userService) {
+        this.userService = userService;
+    }
 
     @Test
     public void UserService_loadUserByEmail() throws Exception {

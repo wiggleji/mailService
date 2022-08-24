@@ -18,8 +18,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 class AuthControllerTest extends BaseTestSetup {
 
+    private final AuthController authController;
+
     @Autowired
-    private AuthController authController;
+    public AuthControllerTest(AuthController authController) {
+        this.authController = authController;
+    }
 
     private UserLoginDto testUserLoginDto() {
         return UserLoginDto.builder()
