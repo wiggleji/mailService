@@ -1,10 +1,12 @@
 package com.example.mailService.service;
 
-import com.example.mailService.domain.dto.JwtTokenDto;
-import com.example.mailService.domain.dto.UserLoginDto;
-import com.example.mailService.domain.dto.UserSignUpDto;
-import com.example.mailService.domain.entity.User;
-import com.example.mailService.domain.entity.UserRole;
+import com.example.mailService.user.AuthService;
+import com.example.mailService.user.UserService;
+import com.example.mailService.user.dto.JwtTokenDto;
+import com.example.mailService.user.dto.UserLoginDto;
+import com.example.mailService.user.dto.UserSignUpDto;
+import com.example.mailService.user.entity.User;
+import com.example.mailService.user.entity.UserRole;
 import com.example.mailService.exception.UserAlreadyExistsException;
 import com.example.mailService.repository.UserRepository;
 import org.junit.jupiter.api.Assertions;
