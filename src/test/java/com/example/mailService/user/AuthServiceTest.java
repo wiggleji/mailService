@@ -21,12 +21,12 @@ import static org.junit.jupiter.api.Assertions.*;
 @Transactional
 class AuthServiceTest extends BaseTestSetup {
 
-    @Autowired
-    private AuthService authService;
+    private final AuthService authService;
 
     @Autowired
-    private UserService userService;
-
+    public AuthServiceTest(AuthService authService) {
+        this.authService = authService;
+    }
 
     private UserLoginDto testUserLoginDto() {
         return UserLoginDto.builder()

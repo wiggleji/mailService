@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface UserEmailInfoRepository extends JpaRepository<EmailMetadata, Long> {
+public interface EmailMetadataRepository extends JpaRepository<EmailMetadata, Long> {
 
     // userId 에 속한 모든 메일전송 정보 조회
     List<EmailMetadata> findAllByUser_Id(Long userId);
