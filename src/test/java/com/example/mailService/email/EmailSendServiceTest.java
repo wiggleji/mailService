@@ -4,17 +4,17 @@ import com.example.mailService.base.BaseTestSetup;
 import com.example.mailService.email.dto.EmailCreateDto;
 import com.example.mailService.email.entity.Email;
 import com.example.mailService.email.entity.EmailMetadata;
+import com.example.mailService.exception.ResourceNotFoundException;
 import com.example.mailService.repository.EmailMetadataRepository;
 import com.example.mailService.utils.MailSender;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.mail.Message;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @Transactional
@@ -39,6 +38,8 @@ class EmailSendServiceTest extends BaseTestSetup {
     private final EmailService emailService;
 
     private final EmailMetadataRepository metadataRepository;
+
+    EmailMetadata testMetadata;
 
 
     @Autowired
@@ -58,7 +59,7 @@ class EmailSendServiceTest extends BaseTestSetup {
     @BeforeEach
     protected void beforeEach() {
         super.beforeEach();
-        EmailMetadata metadata = metadataRepository.save(
+        testMetadata = metadataRepository.save(
                 EmailMetadata.builder()
                         .email("testUser@testMail.com")
                         .username("testUser")
@@ -70,13 +71,13 @@ class EmailSendServiceTest extends BaseTestSetup {
         );
     }
 
-    private EmailCreateDto testEmailCreateDto() {
+    private EmailCreateDto testEmailCreateDto(EmailMetadata metadata, Long userId) {
         return EmailCreateDto.builder()
-                .emailFrom("testUser@testMail.com")
+                .emailFrom(metadata.getEmail())
                 .emailTo("to@otherMail.com")
                 .subject("This is Test mail")
                 .text("test mail text")
-                .userId(testUser.getId())
+                .userId(userId)
                 .emailToList("to@otherMail.com")
                 .emailCcList("cc1@otherMail.com, cc2@otherMail.com")
                 .emailBccList("bcc1@otherMail.com, bcc2@otherMail.com")
@@ -85,19 +86,43 @@ class EmailSendServiceTest extends BaseTestSetup {
 
     @Test
     @WithMockUser(username = USERNAME, password = PASSWORD)
-    public void EmailSendService__sendEmail() throws Exception {
+    public void EmailSendService__sendEmail__SUCCESS() throws Exception {
         // given
         // MailSender.sendMessage 는 mock 처리 (doNothing)
         // MailSender.sendMailByEmailCreateDto 를 포함한 그 외는 정상처리 (SpyBean)
         doNothing().when(mailSender).sendMessage(any(Message.class));
 
         // when
-        Email email = emailSendService.sendEmail(testEmailCreateDto());
+        Email email = emailSendService.sendEmail(testEmailCreateDto(testMetadata, testUser.getId()));
 
         // then
         Email loadEmailById = emailService.loadEmailById(email.getId());
 
         assertThat(email).isEqualTo(loadEmailById);
+    }
+
+    @Test
+    @WithMockUser(username = USERNAME, password = PASSWORD)
+    public void EmailSendService__sendEmail__FAIL() throws Exception {
+        // given
+        createCompareUser();
+        EmailMetadata compareMetadata = EmailMetadata.builder()
+                .email(compareUser.getEmail())
+                .username("compareUser")
+                .password("comparePassword")
+                .smtpHost("smtp.compare.com")
+                .smtpPort(456L)
+                .user(compareUser)
+                .build();
+        metadataRepository.save(compareMetadata);
+        doNothing().when(mailSender).sendMessage(any(Message.class));
+
+
+        // when
+
+        // then
+        Assertions.assertThrows(IllegalArgumentException.class, () -> emailSendService.sendEmail(testEmailCreateDto(compareMetadata, compareUser.getId())));
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> emailSendService.sendEmail(testEmailCreateDto(testMetadata, 9999L)));
     }
 
 }

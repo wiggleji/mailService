@@ -3,7 +3,6 @@ package com.example.mailService.email;
 import com.example.mailService.email.dto.EmailCreateDto;
 import com.example.mailService.email.entity.Email;
 import com.example.mailService.utils.MailSender;
-import com.sun.mail.util.MailConnectException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -34,7 +33,7 @@ public class EmailSendService {
             if (emailMetadataService.validMailMetadata(createDto)) {
 
                 // 2. 메일 전송
-                sendEmailByEmailCreateDto(createDto);
+                mailSender.sendMailByEmailCreateDto(createDto);
 
                 // 3. 메일 전송 후 Email Entity 저장
                 return emailService.createEmail(createDto);
@@ -45,9 +44,5 @@ public class EmailSendService {
             e.getStackTrace();
             throw new RuntimeException(e);
         }
-    }
-
-    public void sendEmailByEmailCreateDto(EmailCreateDto createDto) throws MessagingException {
-        mailSender.sendMailByEmailCreateDto(createDto);
     }
 }

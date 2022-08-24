@@ -18,6 +18,8 @@ public abstract class BaseTestSetup {
 
     protected User testUser;
 
+    protected User compareUser;
+
     @BeforeEach
     protected void beforeEach() {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -29,5 +31,20 @@ public abstract class BaseTestSetup {
                 .role(UserRole.ROLE_USER)
                 .build();
         userRepository.save(testUser);
+    }
+
+    /**
+     * 인증/인가 및 리소스 소유자 검사용 유저 테스트데이터
+     */
+    protected void createCompareUser() {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+        compareUser = User.builder()
+                .username("compareUser")
+                .email("compareUser@test.com")
+                .password(passwordEncoder.encode(PASSWORD))
+                .role(UserRole.ROLE_USER)
+                .build();
+        userRepository.save(compareUser);
     }
 }
