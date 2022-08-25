@@ -1,6 +1,5 @@
 package com.example.mailService.email;
 
-import com.example.mailService.base.BaseTestSetup;
 import com.example.mailService.email.dto.EmailCreateDto;
 import com.example.mailService.email.entity.Email;
 import com.example.mailService.exception.ResourceNotFoundException;
@@ -16,7 +15,7 @@ import java.util.List;
 
 @SpringBootTest
 @Transactional
-class EmailServiceTest extends BaseTestSetup implements EmailTestBuilder {
+class EmailServiceTest extends EmailTestSetup {
 
     private final EmailService emailService;
 
@@ -37,7 +36,7 @@ class EmailServiceTest extends BaseTestSetup implements EmailTestBuilder {
         Email email2 = emailService.createEmail(testEmailDto2);
 
         // when
-        List<Email> emailList = emailService.loadEmailListByUserId(testUser.getId());
+        List<Email> emailList = emailService.loadEmailListByUserId();
 
         // then
         Assertions.assertThat(emailList.size()).isEqualTo(2);
@@ -53,13 +52,14 @@ class EmailServiceTest extends BaseTestSetup implements EmailTestBuilder {
         Email newEmail = emailService.createEmail(testEmailDto1);
 
         // when
-        Email email = emailService.loadEmailById(newEmail.getId());
+        Email email = emailService.loadEmailByIdAndUserId(newEmail.getId());
 
         // then
         Assertions.assertThat(email.getId()).isEqualTo(newEmail.getId());
     }
 
     @Test
+    @WithMockUser(username = USERNAME, password = PASSWORD)
     public void EmailService_loadEmailById__wrongId__FAIL() throws Exception {
         // given
         Long wrongEmailId = 999999L;
@@ -67,6 +67,6 @@ class EmailServiceTest extends BaseTestSetup implements EmailTestBuilder {
         // when
 
         // then
-        org.junit.jupiter.api.Assertions.assertThrows(ResourceNotFoundException.class, () -> emailService.loadEmailById(wrongEmailId));
+        org.junit.jupiter.api.Assertions.assertThrows(ResourceNotFoundException.class, () -> emailService.loadEmailByIdAndUserId(wrongEmailId));
     }
 }

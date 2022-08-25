@@ -38,7 +38,7 @@ public class Email extends BaseEntity {
     @Column(nullable = false)
     private String subject;
 
-    private String content;
+    private String text;
 
     private LocalDateTime dateTimeSend;
 

@@ -7,9 +7,11 @@ import com.example.mailService.exception.ResourceNotFoundException;
 import com.example.mailService.repository.EmailRepository;
 import com.example.mailService.user.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -21,11 +23,20 @@ public class EmailService {
 
     private final UserService userService;
 
-    public List<Email> loadEmailListByUserId(Long userId) {
-        return emailRepository.findEmailsByUserId(userId);
+    public List<Email> loadEmailListByUserId() {
+        User requestUser = userService.loadUserFromSecurityContextHolder();
+        return emailRepository.findEmailsByUserId(requestUser.getId());
     }
 
-    public Email loadEmailById(Long mailId) throws ResourceNotFoundException {
+    public Email loadEmailByIdAndUserId(Long mailId) {
+        User requestUser = userService.loadUserFromSecurityContextHolder();
+        return emailRepository.findEmailByIdAndUserId(mailId, requestUser.getId()).orElseThrow(
+                () -> new ResourceNotFoundException("Email not found with Id: " + mailId));
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public Email loadEmailById(Long mailId) {
+        // 어드민만 가능. 인증없이 메일 조회
         return emailRepository.findEmailById(mailId).orElseThrow(
                 () -> new ResourceNotFoundException("Email not found with Id: " + mailId)
         );
@@ -45,12 +56,9 @@ public class EmailService {
         // 조회 / 생성 / 삭제만 존재.
         // 삭제는 데이터 삭제 대신 userId를 null 로 표현
         // https://www.baeldung.com/spring-jpa-soft-delete
-        User requestUser = userService.loadUserFromSecurityContextHolder();
-        Email email = loadEmailById(emailId);
-        if (email.getId().equals(requestUser.getId())) {
-            // TODO: 메일 삭제 로직 실행
-            // TODO: JPA repository 를 통해 soft delete 를 적용해줘야함
-        }
+        Email email = loadEmailByIdAndUserId(emailId);
+        // TODO: 메일 삭제 로직 실행
+        // TODO: JPA repository 를 통해 soft delete 를 적용해줘야함
     }
 
 }

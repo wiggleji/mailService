@@ -8,9 +8,7 @@ import com.example.mailService.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,15 +23,21 @@ public class EmailController {
 
     private final EmailService emailService;
 
-    // get-list
     @GetMapping("/")
-    public List<EmailDto> emailList(Authentication authentication) {
-        User user = userService.loadUserFromSecurityContextHolder();
-        List<Email> emailList = emailService.loadEmailListByUserId(user.getId());
+    public List<EmailDto> emailList() {
+        List<Email> emailList = emailService.loadEmailListByUserId();
         return emailList.stream().map(EmailDto::from).collect(Collectors.toList());
     }
 
-    // get
+    @GetMapping("/{emailId}")
+    public EmailDto emailDetail(@PathVariable Long emailId) {
+        Email email = emailService.loadEmailByIdAndUserId(emailId);
+        return EmailDto.from(email);
+    }
 
-    // delete
+    @DeleteMapping("/{emailId}")
+    public void emailDelete(@PathVariable Long emailId) {
+        // TODO: soft delete 적용 후 메일 삭제 로직 & 테스트케이스 작성
+        emailService.deleteEmail(emailId);
+    }
 }

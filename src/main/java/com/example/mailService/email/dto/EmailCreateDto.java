@@ -42,7 +42,7 @@ public class EmailCreateDto {
                 .emailCcList(emailCcList)
                 .emailBccList(emailBccList)
                 .subject(subject)
-                .content(text)
+                .text(text)
                 .dateTimeSend(dateTimeSend)
                 .dateTimeReceive(dateTimeReceive)
                 .build();

@@ -1,11 +1,9 @@
 package com.example.mailService.email.dto;
 
 import com.example.mailService.email.entity.Email;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-import javax.persistence.Column;
 import java.time.LocalDateTime;
 
 @Getter
@@ -26,7 +24,7 @@ public class EmailDto {
 
     private String subject;
 
-    private String content;
+    private String text;
 
     private LocalDateTime dateTimeSend;
 
@@ -41,7 +39,7 @@ public class EmailDto {
                 .emailCcList(email.getEmailCcList())
                 .emailBccList(email.getEmailBccList())
                 .subject(email.getSubject())
-                .content(email.getContent())
+                .text(email.getText())
                 .dateTimeSend(email.getDateTimeSend())
                 .dateTimeReceive(email.getDateTimeReceive())
                 .build();

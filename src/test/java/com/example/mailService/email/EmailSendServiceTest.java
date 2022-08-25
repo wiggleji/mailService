@@ -1,6 +1,5 @@
 package com.example.mailService.email;
 
-import com.example.mailService.base.BaseTestSetup;
 import com.example.mailService.email.dto.EmailCreateDto;
 import com.example.mailService.email.entity.Email;
 import com.example.mailService.email.entity.EmailMetadata;
@@ -9,6 +8,7 @@ import com.example.mailService.repository.EmailMetadataRepository;
 import com.example.mailService.utils.MailSender;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -27,7 +27,8 @@ import static org.mockito.Mockito.*;
 @Transactional
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest
-class EmailSendServiceTest extends BaseTestSetup implements EmailTestBuilder {
+@DisplayName("EmailSendService")
+class EmailSendServiceTest extends EmailTestSetup {
 
     @InjectMocks
     private EmailSendService emailSendService;
@@ -59,16 +60,7 @@ class EmailSendServiceTest extends BaseTestSetup implements EmailTestBuilder {
     @BeforeEach
     protected void beforeEach() {
         super.beforeEach();
-        testMetadata = metadataRepository.save(
-                EmailMetadata.builder()
-                        .email("testUser@testMail.com")
-                        .username("testUser")
-                        .password("testPassword")
-                        .smtpHost("smtp.testMail.com")
-                        .smtpPort(465L)
-                        .user(testUser)
-                        .build()
-        );
+        testMetadata = metadataRepository.save(testEmailMetadata(testUser));
     }
 
     private EmailCreateDto testEmailCreateDto(EmailMetadata metadata, Long userId) {
@@ -81,6 +73,7 @@ class EmailSendServiceTest extends BaseTestSetup implements EmailTestBuilder {
 
     @Test
     @WithMockUser(username = USERNAME, password = PASSWORD)
+    @DisplayName("메일 전송 성공 테스트")
     public void EmailSendService__sendEmail__SUCCESS() throws Exception {
         // given
         // MailSender.sendMessage 는 mock 처리 (doNothing)
@@ -91,13 +84,14 @@ class EmailSendServiceTest extends BaseTestSetup implements EmailTestBuilder {
         Email email = emailSendService.sendEmail(testEmailCreateDto(testMetadata, testUser.getId()));
 
         // then
-        Email loadEmailById = emailService.loadEmailById(email.getId());
+        Email loadEmailById = emailService.loadEmailByIdAndUserId(email.getId());
 
         assertThat(email).isEqualTo(loadEmailById);
     }
 
     @Test
     @WithMockUser(username = USERNAME, password = PASSWORD)
+    @DisplayName("메일 전송 실패 테스트: 다른 사용자 요청 & 존재하지 않은 데이터")
     public void EmailSendService__sendEmail__FAIL() throws Exception {
         // given
         createCompareUser();
