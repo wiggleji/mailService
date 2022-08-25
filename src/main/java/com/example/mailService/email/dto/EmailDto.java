@@ -1,5 +1,6 @@
 package com.example.mailService.email.dto;
 
+import com.example.mailService.email.entity.Email;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,4 +31,20 @@ public class EmailDto {
     private LocalDateTime dateTimeSend;
 
     private LocalDateTime dateTimeReceive;
+
+    public static EmailDto from(Email email) {
+        return EmailDto.builder()
+                .id(email.getId())
+                .emailFrom(email.getEmailFrom())
+                .emailTo(email.getEmailTo())
+                .emailToList(email.getEmailToList())
+                .emailCcList(email.getEmailCcList())
+                .emailBccList(email.getEmailBccList())
+                .subject(email.getSubject())
+                .content(email.getContent())
+                .dateTimeSend(email.getDateTimeSend())
+                .dateTimeReceive(email.getDateTimeReceive())
+                .build();
+    }
+
 }

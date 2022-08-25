@@ -27,7 +27,7 @@ import static org.mockito.Mockito.*;
 @Transactional
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest
-class EmailSendServiceTest extends BaseTestSetup {
+class EmailSendServiceTest extends BaseTestSetup implements EmailTestBuilder {
 
     @InjectMocks
     private EmailSendService emailSendService;
@@ -72,16 +72,11 @@ class EmailSendServiceTest extends BaseTestSetup {
     }
 
     private EmailCreateDto testEmailCreateDto(EmailMetadata metadata, Long userId) {
-        return EmailCreateDto.builder()
-                .emailFrom(metadata.getEmail())
-                .emailTo("to@otherMail.com")
-                .subject("This is Test mail")
-                .text("test mail text")
-                .userId(userId)
-                .emailToList("to@otherMail.com")
-                .emailCcList("cc1@otherMail.com, cc2@otherMail.com")
-                .emailBccList("bcc1@otherMail.com, bcc2@otherMail.com")
-                .build();
+        return testEmailCreateDto(
+                metadata.getEmail(), "to@otherMail.com",
+                "to other mail service",
+                "cc1@otherMail.com, cc2@otherMail.com", "bcc1@otherMail.com, bcc2@otherMail.com",
+                userId);
     }
 
     @Test

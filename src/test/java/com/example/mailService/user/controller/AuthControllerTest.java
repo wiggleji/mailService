@@ -1,4 +1,4 @@
-package com.example.mailService.controller;
+package com.example.mailService.user.controller;
 
 import com.example.mailService.base.BaseTestSetup;
 import com.example.mailService.user.controller.AuthController;

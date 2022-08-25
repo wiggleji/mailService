@@ -3,7 +3,6 @@ package com.example.mailService.email;
 import com.example.mailService.base.BaseTestSetup;
 import com.example.mailService.email.dto.EmailCreateDto;
 import com.example.mailService.email.entity.Email;
-import com.example.mailService.email.EmailService;
 import com.example.mailService.exception.ResourceNotFoundException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -17,7 +16,7 @@ import java.util.List;
 
 @SpringBootTest
 @Transactional
-class EmailServiceTest extends BaseTestSetup {
+class EmailServiceTest extends BaseTestSetup implements EmailTestBuilder {
 
     private final EmailService emailService;
 
@@ -30,18 +29,10 @@ class EmailServiceTest extends BaseTestSetup {
     @WithMockUser(username = USERNAME, password = PASSWORD)
     public void EmailService_loadEmailListByUserId() throws Exception {
         // given
-        EmailCreateDto testEmailDto1 = EmailCreateDto.builder()
-                .userId(testUser.getId())
-                .emailFrom("from@test.com")
-                .emailTo("to@test.com")
-                .subject("testMailSubject1")
-                .build();
-        EmailCreateDto testEmailDto2 = EmailCreateDto.builder()
-                .userId(testUser.getId())
-                .emailFrom("from@test.com")
-                .emailTo("to@test.com")
-                .subject("testMailSubject2")
-                .build();
+        EmailCreateDto testEmailDto1 = testEmailCreateDto__NoCcBcc(
+                testUser.getEmail(), "to@test.com", "testMailSubject1", testUser.getId());
+        EmailCreateDto testEmailDto2 = testEmailCreateDto__NoCcBcc(
+                testUser.getEmail(), "to@test.com", "testMailSubject2", testUser.getId());
         Email email1 = emailService.createEmail(testEmailDto1);
         Email email2 = emailService.createEmail(testEmailDto2);
 
@@ -57,12 +48,8 @@ class EmailServiceTest extends BaseTestSetup {
     @WithMockUser(username = USERNAME, password = PASSWORD)
     public void EmailService_createEmail_loadEmailById() throws Exception {
         // given
-        EmailCreateDto testEmailDto1 = EmailCreateDto.builder()
-                .userId(testUser.getId())
-                .emailFrom("from@test.com")
-                .emailTo("to@test.com")
-                .subject("testMailSubject1")
-                .build();
+        EmailCreateDto testEmailDto1 = testEmailCreateDto__NoCcBcc(
+                testUser.getEmail(), "to@test.com", "testMailSubject1", testUser.getId());
         Email newEmail = emailService.createEmail(testEmailDto1);
 
         // when
