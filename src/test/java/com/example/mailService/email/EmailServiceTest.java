@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @SpringBootTest
 @Transactional
@@ -52,7 +53,8 @@ class EmailServiceTest extends EmailTestSetup {
         Email newEmail = emailService.createEmail(testEmailDto1);
 
         // when
-        Email email = emailService.loadEmailByIdAndUserId(newEmail.getId());
+        Email email = emailService.loadEmailByIdAndUserId(newEmail.getId())
+                .orElseThrow(() -> new RuntimeException("Error while running test"));
 
         // then
         Assertions.assertThat(email.getId()).isEqualTo(newEmail.getId());
@@ -60,13 +62,14 @@ class EmailServiceTest extends EmailTestSetup {
 
     @Test
     @WithMockUser(username = USERNAME, password = PASSWORD)
-    public void EmailService_loadEmailById__wrongId__FAIL() throws Exception {
+    public void EmailService_loadEmailById__wrongId__empty__FAIL() throws Exception {
         // given
         Long wrongEmailId = 999999L;
+        Optional<Email> email = emailService.loadEmailByIdAndUserId(wrongEmailId);
 
         // when
 
         // then
-        org.junit.jupiter.api.Assertions.assertThrows(ResourceNotFoundException.class, () -> emailService.loadEmailByIdAndUserId(wrongEmailId));
+        Assertions.assertThat(email).isEmpty();
     }
 }

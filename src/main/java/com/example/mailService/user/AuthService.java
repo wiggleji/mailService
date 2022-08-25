@@ -35,7 +35,6 @@ public class AuthService {
                             loginDto.getPassword()
                     )
             );
-            SecurityContextHolder.getContext().setAuthentication(authentication);
 
             // JWT token 발급
             String jwtToken = jwtTokenProvider.generateToken(authentication);

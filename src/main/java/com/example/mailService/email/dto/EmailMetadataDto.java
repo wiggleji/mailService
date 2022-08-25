@@ -4,9 +4,12 @@ import com.example.mailService.email.entity.EmailMetadata;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Getter
 @Builder
-public class MailMetadataDto {
+public class EmailMetadataDto {
     private Long id;
 
     private String email;
@@ -19,13 +22,19 @@ public class MailMetadataDto {
 
     private Long smtpPort;
 
-    public static MailMetadataDto from(EmailMetadata emailMetadata) {
-        return MailMetadataDto.builder()
+    public static EmailMetadataDto from(EmailMetadata emailMetadata) {
+        return EmailMetadataDto.builder()
                 .id(emailMetadata.getId())
                 .email(emailMetadata.getEmail())
                 .password(emailMetadata.getPassword())
                 .smtpHost(emailMetadata.getSmtpHost())
                 .smtpPort(emailMetadata.getSmtpPort())
                 .build();
+    }
+
+    public static List<EmailMetadataDto> from(List<EmailMetadata> emailMetadata) {
+        return emailMetadata.stream()
+                .map(EmailMetadataDto::from)
+                .collect(Collectors.toList());
     }
 }

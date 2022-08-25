@@ -1,7 +1,7 @@
 package com.example.mailService.email;
 
 import com.example.mailService.email.dto.EmailCreateDto;
-import com.example.mailService.email.dto.MailMetadataCreateDto;
+import com.example.mailService.email.dto.EmailMetadataCreateDto;
 import com.example.mailService.user.entity.User;
 import com.example.mailService.email.entity.EmailMetadata;
 import com.example.mailService.exception.ResourceAlreadyExistException;
@@ -27,12 +27,14 @@ public class EmailMetadataService {
 
     // 유저 메일정보 조회 / 생성
 
-    public List<EmailMetadata> loadEmailMetadataListByUserId(Long userId) {
-        return emailMetadataRepository.findAllByUser_Id(userId);
+    public List<EmailMetadata> loadEmailMetadataListByUserId() {
+        User requestUser = userService.loadUserFromSecurityContextHolder();
+        return emailMetadataRepository.findAllByUser_Id(requestUser.getId());
     }
 
     public EmailMetadata loadEmailMetadataById(Long metadataId) {
-        return emailMetadataRepository.findById(metadataId)
+        User requestUser = userService.loadUserFromSecurityContextHolder();
+        return emailMetadataRepository.findByIdAndUser_Id(metadataId, requestUser.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("EmailMetadata not found by id: " + metadataId));
     }
 
@@ -42,7 +44,7 @@ public class EmailMetadataService {
     }
 
     @Transactional(readOnly = false)
-    public EmailMetadata createEmailMetadata(MailMetadataCreateDto createDto) {
+    public EmailMetadata createEmailMetadata(EmailMetadataCreateDto createDto) {
         // TODO: Java mail API 를 사용해서 유효한 메일 메타데이터 인지 검증해야함
         User requestUser = userService.loadUserFromSecurityContextHolder();
         Optional<EmailMetadata> existingUserEmailInfo = emailMetadataRepository.findByEmailAndUser_Id(createDto.getEmail(), requestUser.getId());

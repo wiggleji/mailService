@@ -11,8 +11,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -28,10 +28,9 @@ public class EmailService {
         return emailRepository.findEmailsByUserId(requestUser.getId());
     }
 
-    public Email loadEmailByIdAndUserId(Long mailId) {
+    public Optional<Email> loadEmailByIdAndUserId(Long mailId) {
         User requestUser = userService.loadUserFromSecurityContextHolder();
-        return emailRepository.findEmailByIdAndUserId(mailId, requestUser.getId()).orElseThrow(
-                () -> new ResourceNotFoundException("Email not found with Id: " + mailId));
+        return emailRepository.findEmailByIdAndUserId(mailId, requestUser.getId());
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -56,7 +55,7 @@ public class EmailService {
         // 조회 / 생성 / 삭제만 존재.
         // 삭제는 데이터 삭제 대신 userId를 null 로 표현
         // https://www.baeldung.com/spring-jpa-soft-delete
-        Email email = loadEmailByIdAndUserId(emailId);
+        Optional<Email> email = loadEmailByIdAndUserId(emailId);
         // TODO: 메일 삭제 로직 실행
         // TODO: JPA repository 를 통해 soft delete 를 적용해줘야함
     }

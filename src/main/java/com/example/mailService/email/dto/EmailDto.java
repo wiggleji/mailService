@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Builder
@@ -45,4 +47,9 @@ public class EmailDto {
                 .build();
     }
 
+    public static List<EmailDto> from(List<Email> emailList) {
+        return emailList.stream()
+                .map(EmailDto::from)
+                .collect(Collectors.toList());
+    }
 }

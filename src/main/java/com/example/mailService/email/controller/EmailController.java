@@ -4,14 +4,16 @@ import com.example.mailService.email.EmailService;
 import com.example.mailService.email.dto.EmailDto;
 import com.example.mailService.email.entity.Email;
 import com.example.mailService.user.UserService;
-import com.example.mailService.user.entity.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,15 +26,18 @@ public class EmailController {
     private final EmailService emailService;
 
     @GetMapping("/")
-    public List<EmailDto> emailList() {
+    public ResponseEntity<List<EmailDto>> emailList() {
         List<Email> emailList = emailService.loadEmailListByUserId();
-        return emailList.stream().map(EmailDto::from).collect(Collectors.toList());
+        if (emailList.size() > 0)
+            return new ResponseEntity<>(EmailDto.from(emailList), HttpStatus.OK);
+        else return new ResponseEntity<>(Collections.emptyList(), HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/{emailId}")
-    public EmailDto emailDetail(@PathVariable Long emailId) {
-        Email email = emailService.loadEmailByIdAndUserId(emailId);
-        return EmailDto.from(email);
+    public ResponseEntity<EmailDto> emailDetail(@PathVariable Long emailId) {
+        Optional<Email> email = emailService.loadEmailByIdAndUserId(emailId);
+        return email.map(value -> new ResponseEntity<>(EmailDto.from(value), HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @DeleteMapping("/{emailId}")
