@@ -38,9 +38,19 @@ public class Email extends BaseEntity {
     @Column(nullable = false)
     private String subject;
 
-    private String content;
+    private String text;
 
     private LocalDateTime dateTimeSend;
 
     private LocalDateTime dateTimeReceive;
+
+
+    @PrePersist
+    public void prePersist() {
+        if (this.dateTimeSend == null) {
+            // 메일 즉시 전송 시 송신/수신 시간은 동일
+            this.dateTimeSend = LocalDateTime.now();
+            this.dateTimeReceive = LocalDateTime.now();
+        }
+    }
 }

@@ -47,6 +47,7 @@ public class UserService {
         return loadUserByUsername(userDetails.getUsername());
     }
 
+    @Transactional(readOnly = false)
     public User createUser(UserSignUpDto signUpDto) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
