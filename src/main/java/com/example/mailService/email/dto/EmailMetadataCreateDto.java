@@ -19,9 +19,7 @@ public class EmailMetadataCreateDto {
 
     private Long smtpPort;
 
-    private User user;
-
-    public EmailMetadata toEntity() {
+    public EmailMetadata toEntity(User user) {
         return EmailMetadata.builder()
                 .email(email)
                 .username(username)

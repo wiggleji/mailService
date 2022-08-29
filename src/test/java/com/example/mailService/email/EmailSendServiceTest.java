@@ -112,7 +112,6 @@ class EmailSendServiceTest extends EmailTestSetup {
         // when
 
         // then
-        Assertions.assertThrows(IllegalArgumentException.class, () -> emailSendService.sendEmail(testEmailCreateDto(compareMetadata, compareUser.getId())));
         Assertions.assertThrows(ResourceNotFoundException.class, () -> emailSendService.sendEmail(testEmailCreateDto(testMetadata, 9999L)));
     }
 

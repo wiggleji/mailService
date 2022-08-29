@@ -88,7 +88,7 @@ class EmailMetadataControllerTest extends EmailTestSetup {
     @WithMockUser(username = USERNAME, password = PASSWORD)
     public void EmailMetadataController__emailMetadataCreate__SUCCESS() throws Exception {
         // given
-        EmailMetadataCreateDto createDto = testEmailMetadataCreateDto("testEmail@test.com", testUser);
+        EmailMetadataCreateDto createDto = testEmailMetadataCreateDto("testEmail@test.com");
 
         // when
         ResponseEntity<EmailMetadataDto> response = metadataController.emailMetadataCreate(createDto);
@@ -105,25 +105,12 @@ class EmailMetadataControllerTest extends EmailTestSetup {
     @WithMockUser(username = USERNAME, password = PASSWORD)
     public void EmailMetadataController__emailMetadataCreate__ResourceAlreadyExistException__FAIL() throws Exception {
         // given
-        EmailMetadataCreateDto duplicateCreateDto = testEmailMetadataCreateDto(testUser.getEmail(), testUser);
+        EmailMetadataCreateDto duplicateCreateDto = testEmailMetadataCreateDto(testUser.getEmail());
 
         // when
 
         // then
         Assertions.assertThrows(ResourceAlreadyExistException.class, () -> metadataController.emailMetadataCreate(duplicateCreateDto));
-    }
-
-    @Test
-    @WithMockUser(username = USERNAME, password = PASSWORD)
-    public void EmailMetadataController__emailMetadataCreate__IllegalArgumentException__FAIL() throws Exception {
-        // given
-        createCompareUser();
-        EmailMetadataCreateDto otherUserCreateDto = testEmailMetadataCreateDto(compareUser.getEmail(), compareUser);
-
-        // when
-
-        // then
-        Assertions.assertThrows(IllegalArgumentException.class, () -> metadataController.emailMetadataCreate(otherUserCreateDto));
     }
 
     @Test

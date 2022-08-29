@@ -49,11 +49,9 @@ public class EmailMetadataService {
         // TODO: Java mail API 를 사용해서 유효한 메일 메타데이터 인지 검증해야함
         User requestUser = userService.loadUserFromSecurityContextHolder();
         Optional<EmailMetadata> existingUserEmailInfo = emailMetadataRepository.findByEmailAndUser_Id(createDto.getEmail(), requestUser.getId());
-        if (!existingUserEmailInfo.isPresent() & createDto.getUser().equals(requestUser)) {
-            return emailMetadataRepository.save(createDto.toEntity());
-        } else if (existingUserEmailInfo.isPresent()) {
+        if (existingUserEmailInfo.isPresent()) {
             throw new ResourceAlreadyExistException("Resource already exist with: " + existingUserEmailInfo);
-        } else throw new IllegalArgumentException("Request user is not equal. User: " + requestUser.getId() + ", Request:" + createDto.getUser().getId());
+        } else return emailMetadataRepository.save(createDto.toEntity(requestUser));
     }
 
     @Transactional(readOnly = false)

@@ -1,8 +1,6 @@
 package com.example.mailService.email;
 
-import com.example.mailService.base.BaseTestSetup;
 import com.example.mailService.email.dto.EmailMetadataCreateDto;
-import com.example.mailService.user.entity.User;
 import com.example.mailService.email.entity.EmailMetadata;
 import com.example.mailService.exception.ResourceAlreadyExistException;
 import org.assertj.core.api.Assertions;
@@ -20,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
-class EmailMetadataServiceTest extends BaseTestSetup {
+class EmailMetadataServiceTest extends EmailTestSetup {
 
 //    @Autowired
     private final EmailMetadataService emailMetadataService;
@@ -30,22 +28,11 @@ class EmailMetadataServiceTest extends BaseTestSetup {
         this.emailMetadataService = emailMetadataService;
     }
 
-    private EmailMetadataCreateDto createTestDto(String email, User user) {
-        return EmailMetadataCreateDto.builder()
-                .email(email)
-                .username("testSMTP")
-                .password("testPassword")
-                .smtpHost("smtp.test.com")
-                .smtpPort(465L)
-                .user(user)
-                .build();
-    }
-
     @Test
     @WithMockUser(username = USERNAME, password = PASSWORD)
     public void UserEmailInfoService_createUserEmailInfo__SUCCESS() throws Exception {
         // given
-        EmailMetadataCreateDto createDto = createTestDto("test@testEmail.com", testUser);
+        EmailMetadataCreateDto createDto = testEmailMetadataCreateDto("test@testEmail.com");
 
         // when
         EmailMetadata emailMetadata = emailMetadataService.createEmailMetadata(createDto);
@@ -64,8 +51,8 @@ class EmailMetadataServiceTest extends BaseTestSetup {
     @WithMockUser(username = USERNAME, password = PASSWORD)
     public void UserEmailInfoService_loadUserEmailInfo__SUCCESS() throws Exception {
         // given
-        EmailMetadataCreateDto createDto1 = createTestDto("test1@testEmail.com", testUser);
-        EmailMetadataCreateDto createDto2 = createTestDto("test2@testEmail.com", testUser);
+        EmailMetadataCreateDto createDto1 = testEmailMetadataCreateDto("test1@testEmail.com");
+        EmailMetadataCreateDto createDto2 = testEmailMetadataCreateDto("test2@testEmail.com");
 
         // when
         EmailMetadata emailMetadata1 = emailMetadataService.createEmailMetadata(createDto1);
@@ -79,24 +66,9 @@ class EmailMetadataServiceTest extends BaseTestSetup {
 
     @Test
     @WithMockUser(username = USERNAME, password = PASSWORD)
-    public void UserEmailInfoService_createUserEmailInfo__WRONG_USER() throws Exception {
-        // given
-        EmailMetadataCreateDto wrongCreateDto = createTestDto("test1@testEmail.com",
-                User.builder()
-                        .username("anotherUser").email("wrongUser@test.com").password("wrongPassword")
-                        .build());
-
-        // when
-
-        // then
-        org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () -> emailMetadataService.createEmailMetadata(wrongCreateDto));
-    }
-
-    @Test
-    @WithMockUser(username = USERNAME, password = PASSWORD)
     public void UserEmailInfoService_createUserEmailInfo__DUPLICATE() throws Exception {
         // given
-        EmailMetadataCreateDto duplicateCreateDto = createTestDto("test@testEmail.com", testUser);
+        EmailMetadataCreateDto duplicateCreateDto = testEmailMetadataCreateDto("test@testEmail.com");
         // when
         EmailMetadata emailMetadata = emailMetadataService.createEmailMetadata(duplicateCreateDto);
 

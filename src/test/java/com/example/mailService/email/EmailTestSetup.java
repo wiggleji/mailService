@@ -58,14 +58,13 @@ public class EmailTestSetup extends BaseTestSetup {
                 .build();
     }
 
-    public EmailMetadataCreateDto testEmailMetadataCreateDto(String email, User user) {
+    public EmailMetadataCreateDto testEmailMetadataCreateDto(String email) {
         return EmailMetadataCreateDto.builder()
                 .email(email)
                 .username("testUser")
                 .password("testPassword")
                 .smtpHost("smtp.testMail.com")
                 .smtpPort(465L)
-                .user(user)
                 .build();
     }
 
