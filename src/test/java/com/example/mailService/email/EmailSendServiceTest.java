@@ -60,7 +60,8 @@ class EmailSendServiceTest extends EmailTestSetup {
     @BeforeEach
     protected void beforeEach() {
         super.beforeEach();
-        testMetadata = metadataRepository.save(testEmailMetadata(testUser));
+        testMetadata = metadataRepository.save(
+                testEmailMetadata(testUser.getEmail(), testUser));
     }
 
     private EmailCreateDto testEmailCreateDto(EmailMetadata metadata, Long userId) {

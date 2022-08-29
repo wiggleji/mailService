@@ -41,7 +41,8 @@ class EmailControllerTest extends EmailTestSetup {
     @BeforeEach
     public void beforeEach() {
         super.beforeEach();
-        metadataRepository.save(testEmailMetadata(testUser));
+        metadataRepository.save(
+                testEmailMetadata(testUser.getEmail(), testUser));
     }
 
     @Test

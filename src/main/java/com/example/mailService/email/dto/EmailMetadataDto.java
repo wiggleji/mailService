@@ -26,6 +26,7 @@ public class EmailMetadataDto {
         return EmailMetadataDto.builder()
                 .id(emailMetadata.getId())
                 .email(emailMetadata.getEmail())
+                .username(emailMetadata.getUsername())
                 .password(emailMetadata.getPassword())
                 .smtpHost(emailMetadata.getSmtpHost())
                 .smtpPort(emailMetadata.getSmtpPort())

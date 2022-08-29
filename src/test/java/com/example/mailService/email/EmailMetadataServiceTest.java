@@ -14,6 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
@@ -46,14 +49,15 @@ class EmailMetadataServiceTest extends BaseTestSetup {
 
         // when
         EmailMetadata emailMetadata = emailMetadataService.createEmailMetadata(createDto);
-        EmailMetadata retrieveEmailMetadata = emailMetadataService.loadEmailMetadataById(emailMetadata.getId());
+        Optional<EmailMetadata> retrieveEmailMetadata = emailMetadataService.loadEmailMetadataById(emailMetadata.getId());
 
         // then
-        Assertions.assertThat(emailMetadata.getEmail()).isEqualTo("test@testEmail.com");
-        Assertions.assertThat(emailMetadata.getUser()).isEqualTo(testUser);
+        assertThat(emailMetadata.getEmail()).isEqualTo("test@testEmail.com");
+        assertThat(emailMetadata.getUser()).isEqualTo(testUser);
 
-        Assertions.assertThat(retrieveEmailMetadata.getUser()).isEqualTo(testUser);
-        Assertions.assertThat(retrieveEmailMetadata.getId()).isEqualTo(emailMetadata.getId());
+        assertThat(retrieveEmailMetadata).isPresent();
+        assertThat(retrieveEmailMetadata.get().getUser()).isEqualTo(testUser);
+        assertThat(retrieveEmailMetadata.get().getId()).isEqualTo(emailMetadata.getId());
     }
 
     @Test
@@ -70,7 +74,7 @@ class EmailMetadataServiceTest extends BaseTestSetup {
         // then
         List<EmailMetadata> emailInfoList = emailMetadataService.loadEmailMetadataListByUserId();
 
-        Assertions.assertThat(emailInfoList).isEqualTo(Arrays.asList(emailMetadata1, emailMetadata2));
+        assertThat(emailInfoList).isEqualTo(Arrays.asList(emailMetadata1, emailMetadata2));
     }
 
     @Test

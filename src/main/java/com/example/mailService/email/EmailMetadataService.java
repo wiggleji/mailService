@@ -2,6 +2,7 @@ package com.example.mailService.email;
 
 import com.example.mailService.email.dto.EmailCreateDto;
 import com.example.mailService.email.dto.EmailMetadataCreateDto;
+import com.example.mailService.email.dto.EmailMetadataUpdateDto;
 import com.example.mailService.user.entity.User;
 import com.example.mailService.email.entity.EmailMetadata;
 import com.example.mailService.exception.ResourceAlreadyExistException;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Properties;
 
@@ -32,10 +34,9 @@ public class EmailMetadataService {
         return emailMetadataRepository.findAllByUser_Id(requestUser.getId());
     }
 
-    public EmailMetadata loadEmailMetadataById(Long metadataId) {
+    public Optional<EmailMetadata> loadEmailMetadataById(Long metadataId) {
         User requestUser = userService.loadUserFromSecurityContextHolder();
-        return emailMetadataRepository.findByIdAndUser_Id(metadataId, requestUser.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("EmailMetadata not found by id: " + metadataId));
+        return emailMetadataRepository.findByIdAndUser_Id(metadataId, requestUser.getId());
     }
 
     public EmailMetadata loadEmailMetadataByEmailAndUserId(String email, Long userId) {
@@ -53,6 +54,16 @@ public class EmailMetadataService {
         } else if (existingUserEmailInfo.isPresent()) {
             throw new ResourceAlreadyExistException("Resource already exist with: " + existingUserEmailInfo);
         } else throw new IllegalArgumentException("Request user is not equal. User: " + requestUser.getId() + ", Request:" + createDto.getUser().getId());
+    }
+
+    @Transactional(readOnly = false)
+    public EmailMetadata updateEmailMetadata(Long metadataId, EmailMetadataUpdateDto updateDto) {
+        User requestUser = userService.loadUserFromSecurityContextHolder();
+        EmailMetadata metadata = emailMetadataRepository.findByIdAndUser_Id(metadataId, requestUser.getId())
+                .orElseThrow(NoSuchElementException::new);
+
+        metadata.update(updateDto);
+        return emailMetadataRepository.save(metadata);
     }
 
     public boolean validMailMetadata(EmailCreateDto createDto) {
