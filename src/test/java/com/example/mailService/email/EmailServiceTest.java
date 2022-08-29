@@ -30,9 +30,9 @@ class EmailServiceTest extends EmailTestSetup {
     public void EmailService_loadEmailListByUserId() throws Exception {
         // given
         EmailCreateDto testEmailDto1 = testEmailCreateDto__NoCcBcc(
-                testUser.getEmail(), "to@test.com", "testMailSubject1", testUser.getId());
+                testUser.getEmail(), "to@test.com", "testMailSubject1");
         EmailCreateDto testEmailDto2 = testEmailCreateDto__NoCcBcc(
-                testUser.getEmail(), "to@test.com", "testMailSubject2", testUser.getId());
+                testUser.getEmail(), "to@test.com", "testMailSubject2");
         Email email1 = emailService.createEmail(testEmailDto1);
         Email email2 = emailService.createEmail(testEmailDto2);
 
@@ -49,7 +49,7 @@ class EmailServiceTest extends EmailTestSetup {
     public void EmailService_createEmail_loadEmailById() throws Exception {
         // given
         EmailCreateDto testEmailDto1 = testEmailCreateDto__NoCcBcc(
-                testUser.getEmail(), "to@test.com", "testMailSubject1", testUser.getId());
+                testUser.getEmail(), "to@test.com", "testMailSubject1");
         Email newEmail = emailService.createEmail(testEmailDto1);
 
         // when

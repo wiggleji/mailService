@@ -13,8 +13,6 @@ import java.time.LocalDateTime;
 @Builder
 public class EmailCreateDto {
 
-    private Long userId;
-
     private String emailFrom;
 
     private String emailTo;
@@ -33,7 +31,7 @@ public class EmailCreateDto {
 
     private LocalDateTime dateTimeReceive;
 
-    public Email toEntity() {
+    public Email toEntity(Long userId) {
         return Email.builder()
                 .userId(userId)
                 .emailFrom(emailFrom)

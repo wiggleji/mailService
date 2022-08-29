@@ -1,6 +1,8 @@
 package com.example.mailService.email.controller;
 
+import com.example.mailService.email.EmailSendService;
 import com.example.mailService.email.EmailService;
+import com.example.mailService.email.dto.EmailCreateDto;
 import com.example.mailService.email.dto.EmailDto;
 import com.example.mailService.email.entity.Email;
 import com.example.mailService.user.UserService;
@@ -18,12 +20,12 @@ import java.util.function.Supplier;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/email")
-@PreAuthorize("hasRole('ROLE_USER')")
+@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
 public class EmailController {
 
-    private final UserService userService;
-
     private final EmailService emailService;
+
+    private final EmailSendService emailSendService;
 
     @GetMapping("/")
     public ResponseEntity<List<EmailDto>> emailList() {
@@ -44,5 +46,11 @@ public class EmailController {
     public void emailDelete(@PathVariable Long emailId) {
         // TODO: soft delete 적용 후 메일 삭제 로직 & 테스트케이스 작성
         emailService.deleteEmail(emailId);
+    }
+
+    @PostMapping("/send")
+    public ResponseEntity<EmailDto> sendEmail(@RequestBody EmailCreateDto createDto) {
+        Email email = emailSendService.sendEmail(createDto);
+        return new ResponseEntity<>(EmailDto.from(email), HttpStatus.CREATED);
     }
 }

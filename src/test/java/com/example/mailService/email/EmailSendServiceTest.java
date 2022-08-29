@@ -64,12 +64,11 @@ class EmailSendServiceTest extends EmailTestSetup {
                 testEmailMetadata(testUser.getEmail(), testUser));
     }
 
-    private EmailCreateDto testEmailCreateDto(EmailMetadata metadata, Long userId) {
+    private EmailCreateDto testEmailCreateDto(EmailMetadata metadata) {
         return testEmailCreateDto(
                 metadata.getEmail(), "to@otherMail.com",
                 "to other mail service",
-                "cc1@otherMail.com, cc2@otherMail.com", "bcc1@otherMail.com, bcc2@otherMail.com",
-                userId);
+                "cc1@otherMail.com, cc2@otherMail.com", "bcc1@otherMail.com, bcc2@otherMail.com");
     }
 
     @Test
@@ -82,7 +81,7 @@ class EmailSendServiceTest extends EmailTestSetup {
         doNothing().when(mailSender).sendMessage(any(Message.class));
 
         // when
-        Email email = emailSendService.sendEmail(testEmailCreateDto(testMetadata, testUser.getId()));
+        Email email = emailSendService.sendEmail(testEmailCreateDto(testMetadata));
 
         // then
         Email loadEmailById = emailService.loadEmailByIdAndUserId(email.getId())
@@ -112,7 +111,7 @@ class EmailSendServiceTest extends EmailTestSetup {
         // when
 
         // then
-        Assertions.assertThrows(ResourceNotFoundException.class, () -> emailSendService.sendEmail(testEmailCreateDto(testMetadata, 9999L)));
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> emailSendService.sendEmail(testEmailCreateDto(compareMetadata)));
     }
 
 }

@@ -66,9 +66,9 @@ public class EmailMetadataService {
 
     public boolean validMailMetadata(EmailCreateDto createDto) {
         // 요청자 정보와 메일 정보 검증
-        User user = userService.loadUserFromSecurityContextHolder();
-        EmailMetadata emailMetadata = loadEmailMetadataByEmailAndUserId(createDto.getEmailFrom(), createDto.getUserId());
-        return emailMetadata.getUser().equals(user);
+        User requestUser = userService.loadUserFromSecurityContextHolder();
+        EmailMetadata emailMetadata = loadEmailMetadataByEmailAndUserId(createDto.getEmailFrom(), requestUser.getId());
+        return emailMetadata.getUser().equals(requestUser);
     }
 
     public Properties generateEmailMetadataProperty(EmailMetadata metadata) {

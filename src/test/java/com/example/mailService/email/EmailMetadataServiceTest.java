@@ -3,7 +3,7 @@ package com.example.mailService.email;
 import com.example.mailService.email.dto.EmailMetadataCreateDto;
 import com.example.mailService.email.entity.EmailMetadata;
 import com.example.mailService.exception.ResourceAlreadyExistException;
-import org.assertj.core.api.Assertions;
+import com.example.mailService.utils.Encryption;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,9 +23,12 @@ class EmailMetadataServiceTest extends EmailTestSetup {
 //    @Autowired
     private final EmailMetadataService emailMetadataService;
 
+    private final Encryption encryption;
+
     @Autowired
-    public EmailMetadataServiceTest(EmailMetadataService emailMetadataService) {
+    public EmailMetadataServiceTest(EmailMetadataService emailMetadataService, Encryption encryption) {
         this.emailMetadataService = emailMetadataService;
+        this.encryption = encryption;
     }
 
     @Test
@@ -45,6 +48,8 @@ class EmailMetadataServiceTest extends EmailTestSetup {
         assertThat(retrieveEmailMetadata).isPresent();
         assertThat(retrieveEmailMetadata.get().getUser()).isEqualTo(testUser);
         assertThat(retrieveEmailMetadata.get().getId()).isEqualTo(emailMetadata.getId());
+        // TODO: 메일 전송 정보 양방향 암호화 (EventListener 혹은 별도 처리 로직 적용 필요)
+//        assertThat(encryption.decryptAES256(retrieveEmailMetadata.get().getPassword())).isEqualTo(createDto.getPassword());
     }
 
     @Test

@@ -4,6 +4,8 @@ import com.example.mailService.user.entity.User;
 import com.example.mailService.email.entity.EmailMetadata;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Getter
 @Builder

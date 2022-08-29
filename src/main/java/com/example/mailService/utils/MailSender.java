@@ -4,6 +4,8 @@ import com.example.mailService.email.EmailMetadataService;
 import com.example.mailService.email.dto.EmailCreateDto;
 import com.example.mailService.email.dto.EmailMessageDto;
 import com.example.mailService.email.entity.EmailMetadata;
+import com.example.mailService.user.UserService;
+import com.example.mailService.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -22,11 +24,14 @@ public class MailSender {
 
     private final EmailMetadataService metadataService;
 
+    private final UserService userService;
+
     @Transactional
     public void sendMailByEmailCreateDto(EmailCreateDto createDto) throws MessagingException {
         try {
+            User requestUser = userService.loadUserFromSecurityContextHolder();
             // EmailCreateDto 로부터 metadata 조회
-            EmailMetadata metadata = metadataService.loadEmailMetadataByEmailAndUserId(createDto.getEmailFrom(), createDto.getUserId());
+            EmailMetadata metadata = metadataService.loadEmailMetadataByEmailAndUserId(createDto.getEmailFrom(), requestUser.getId());
             // Java Mail API session/message 생성
             Session session = generateMailSession(metadata);
             Message message = generateMessage(session, createDto.toEmailMessageDto());

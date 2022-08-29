@@ -1,15 +1,11 @@
 package com.example.mailService.email.entity;
 
-import com.example.mailService.email.dto.EmailCreateDto;
-import com.example.mailService.email.dto.EmailMetadataCreateDto;
-import com.example.mailService.email.dto.EmailMetadataDto;
 import com.example.mailService.email.dto.EmailMetadataUpdateDto;
 import com.example.mailService.user.entity.BaseEntity;
 import com.example.mailService.user.entity.User;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.example.mailService.utils.Encryption;
+import lombok.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 

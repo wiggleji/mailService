@@ -24,7 +24,7 @@ public class EmailTestSetup extends BaseTestSetup {
     }
 
 
-    public EmailCreateDto testEmailCreateDto(String from, String to, String subject, String ccList, String bccList, Long userId) {
+    public EmailCreateDto testEmailCreateDto(String from, String to, String subject, String ccList, String bccList) {
         return EmailCreateDto.builder()
                 .emailFrom(from)
                 .emailTo(to)
@@ -33,17 +33,15 @@ public class EmailTestSetup extends BaseTestSetup {
                 .emailToList(to)
                 .emailCcList(ccList)
                 .emailBccList(bccList)
-                .userId(userId)
                 .build();
     }
 
-    public EmailCreateDto testEmailCreateDto__NoCcBcc(String from, String to, String subject, Long userId) {
+    public EmailCreateDto testEmailCreateDto__NoCcBcc(String from, String to, String subject) {
         return EmailCreateDto.builder()
                 .emailFrom(from)
                 .emailTo(to)
                 .subject(subject)
                 .text("Test Mail content")
-                .userId(userId)
                 .build();
     }
 

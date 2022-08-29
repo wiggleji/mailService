@@ -44,9 +44,7 @@ public class EmailService {
     @Transactional(readOnly = false)
     public Email createEmail(EmailCreateDto createDto) {
         User requestUser = userService.loadUserFromSecurityContextHolder();
-        if (createDto.getUserId().equals(requestUser.getId())) {
-            return emailRepository.save(createDto.toEntity());
-        } else throw new IllegalArgumentException("Request user is not equal. User: " + requestUser.getId() + ", Request:" + createDto.getUserId());
+        return emailRepository.save(createDto.toEntity(requestUser.getId()));
     }
 
     @Transactional(readOnly = false)

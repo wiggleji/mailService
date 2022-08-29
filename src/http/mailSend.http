@@ -1,0 +1,50 @@
+### 로그인
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "test1234"
+}
+> {%
+ client.global.set("authorizationKey", response.body.token);
+ %}
+
+
+<> 2022-08-29T105523.200.json
+
+###
+GET http://localhost:8080/users/self
+Authorization: Bearer {{authorizationKey}}
+
+> {%
+ client.global.set("userId", response.body.id);
+ %}
+
+### 메일 전송 정보 생성
+POST http://localhost:8080/email-metadata/
+Content-Type: application/json
+Authorization: Bearer {{authorizationKey}}
+
+{
+  "email": "{{email}}",
+  "username": "{{username}}",
+  "password": "{{password}}",
+  "smtpHost": "{{smtpHost}}",
+  "smtpPort": {{smtpPort}}
+}
+
+### 메일 전송
+POST http://localhost:8080/email/send/
+Content-Type: application/json
+Authorization: Bearer {{authorizationKey}}
+
+{
+  "emailFrom": "{{email}}",
+  "emailTo": "roamgom@gmail.com",
+  "emailToList": "roamgom@gmail.com",
+  "emailCcList": "",
+  "emailBccList": "",
+  "subject": "testMailFromJava",
+  "text": "실제 이메일전송테스트"
+}
