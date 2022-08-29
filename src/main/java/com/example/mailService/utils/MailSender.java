@@ -24,27 +24,6 @@ public class MailSender {
 
     private final EmailMetadataService metadataService;
 
-    private final UserService userService;
-
-    @Transactional
-    public void sendMailByEmailCreateDto(EmailCreateDto createDto) throws MessagingException {
-        try {
-            User requestUser = userService.loadUserFromSecurityContextHolder();
-            // EmailCreateDto 로부터 metadata 조회
-            EmailMetadata metadata = metadataService.loadEmailMetadataByEmailAndUserId(createDto.getEmailFrom(), requestUser.getId());
-            // Java Mail API session/message 생성
-            Session session = generateMailSession(metadata);
-            Message message = generateMessage(session, createDto.toEmailMessageDto());
-
-            // 메일 전송
-            sendMessage(message);
-
-        } catch (MessagingException e) {
-            log.error("Error while sending message from EmailCreateDto: " + createDto);
-            throw e;
-        }
-    }
-
     public Session generateMailSession(EmailMetadata metadata) {
         // 메일 전송을 위한 메일세션 생성
         Properties properties = metadataService.generateEmailMetadataProperty(metadata);

@@ -34,7 +34,7 @@ Authorization: Bearer {{authorizationKey}}
   "smtpPort": {{smtpPort}}
 }
 
-### 메일 전송
+### 실제 메일 전송
 POST http://localhost:8080/email/send/
 Content-Type: application/json
 Authorization: Bearer {{authorizationKey}}

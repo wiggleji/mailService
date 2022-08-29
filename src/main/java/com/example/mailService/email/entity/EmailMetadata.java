@@ -3,7 +3,6 @@ package com.example.mailService.email.entity;
 import com.example.mailService.email.dto.EmailMetadataUpdateDto;
 import com.example.mailService.user.entity.BaseEntity;
 import com.example.mailService.user.entity.User;
-import com.example.mailService.utils.Encryption;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
