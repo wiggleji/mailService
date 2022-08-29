@@ -10,12 +10,14 @@ import lombok.Getter;
 @AllArgsConstructor
 public class UserDto {
 
+    private Long id;
+
     private String username;
 
     private String email;
 
     public static UserDto from(User user) {
         // Entity to DTO
-        return new UserDto(user.getUsername(), user.getEmail());
+        return new UserDto(user.getId(), user.getUsername(), user.getEmail());
     }
 }

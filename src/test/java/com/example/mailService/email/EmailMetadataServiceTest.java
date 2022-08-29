@@ -1,12 +1,9 @@
 package com.example.mailService.email;
 
-import com.example.mailService.base.BaseTestSetup;
-import com.example.mailService.email.dto.MailMetadataCreateDto;
-import com.example.mailService.user.entity.User;
+import com.example.mailService.email.dto.EmailMetadataCreateDto;
 import com.example.mailService.email.entity.EmailMetadata;
 import com.example.mailService.exception.ResourceAlreadyExistException;
-import lombok.RequiredArgsConstructor;
-import org.assertj.core.api.Assertions;
+import com.example.mailService.utils.Encryption;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,85 +12,68 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
-class EmailMetadataServiceTest extends BaseTestSetup {
+class EmailMetadataServiceTest extends EmailTestSetup {
 
 //    @Autowired
     private final EmailMetadataService emailMetadataService;
 
-    @Autowired
-    public EmailMetadataServiceTest(EmailMetadataService emailMetadataService) {
-        this.emailMetadataService = emailMetadataService;
-    }
+    private final Encryption encryption;
 
-    private MailMetadataCreateDto createTestDto(String email, User user) {
-        return MailMetadataCreateDto.builder()
-                .email(email)
-                .username("testSMTP")
-                .password("testPassword")
-                .smtpHost("smtp.test.com")
-                .smtpPort(465L)
-                .user(user)
-                .build();
+    @Autowired
+    public EmailMetadataServiceTest(EmailMetadataService emailMetadataService, Encryption encryption) {
+        this.emailMetadataService = emailMetadataService;
+        this.encryption = encryption;
     }
 
     @Test
     @WithMockUser(username = USERNAME, password = PASSWORD)
     public void UserEmailInfoService_createUserEmailInfo__SUCCESS() throws Exception {
         // given
-        MailMetadataCreateDto createDto = createTestDto("test@testEmail.com", testUser);
+        EmailMetadataCreateDto createDto = testEmailMetadataCreateDto("test@testEmail.com");
 
         // when
         EmailMetadata emailMetadata = emailMetadataService.createEmailMetadata(createDto);
-        EmailMetadata retrieveEmailMetadata = emailMetadataService.loadEmailMetadataById(emailMetadata.getId());
+        Optional<EmailMetadata> retrieveEmailMetadata = emailMetadataService.loadEmailMetadataById(emailMetadata.getId());
 
         // then
-        Assertions.assertThat(emailMetadata.getEmail()).isEqualTo("test@testEmail.com");
-        Assertions.assertThat(emailMetadata.getUser()).isEqualTo(testUser);
+        assertThat(emailMetadata.getEmail()).isEqualTo("test@testEmail.com");
+        assertThat(emailMetadata.getUser()).isEqualTo(testUser);
 
-        Assertions.assertThat(retrieveEmailMetadata.getUser()).isEqualTo(testUser);
-        Assertions.assertThat(retrieveEmailMetadata.getId()).isEqualTo(emailMetadata.getId());
+        assertThat(retrieveEmailMetadata).isPresent();
+        assertThat(retrieveEmailMetadata.get().getUser()).isEqualTo(testUser);
+        assertThat(retrieveEmailMetadata.get().getId()).isEqualTo(emailMetadata.getId());
+        // TODO: 메일 전송 정보 양방향 암호화 (EventListener 혹은 별도 처리 로직 적용 필요)
+//        assertThat(encryption.decryptAES256(retrieveEmailMetadata.get().getPassword())).isEqualTo(createDto.getPassword());
     }
 
     @Test
     @WithMockUser(username = USERNAME, password = PASSWORD)
     public void UserEmailInfoService_loadUserEmailInfo__SUCCESS() throws Exception {
         // given
-        MailMetadataCreateDto createDto1 = createTestDto("test1@testEmail.com", testUser);
-        MailMetadataCreateDto createDto2 = createTestDto("test2@testEmail.com", testUser);
+        EmailMetadataCreateDto createDto1 = testEmailMetadataCreateDto("test1@testEmail.com");
+        EmailMetadataCreateDto createDto2 = testEmailMetadataCreateDto("test2@testEmail.com");
 
         // when
         EmailMetadata emailMetadata1 = emailMetadataService.createEmailMetadata(createDto1);
         EmailMetadata emailMetadata2 = emailMetadataService.createEmailMetadata(createDto2);
 
         // then
-        List<EmailMetadata> emailInfoList = emailMetadataService.loadEmailMetadataListByUserId(testUser.getId());
+        List<EmailMetadata> emailInfoList = emailMetadataService.loadEmailMetadataListByUserId();
 
-        Assertions.assertThat(emailInfoList).isEqualTo(Arrays.asList(emailMetadata1, emailMetadata2));
-    }
-
-    @Test
-    @WithMockUser(username = USERNAME, password = PASSWORD)
-    public void UserEmailInfoService_createUserEmailInfo__WRONG_USER() throws Exception {
-        // given
-        MailMetadataCreateDto wrongCreateDto = createTestDto("test1@testEmail.com",
-                User.builder()
-                        .username("anotherUser").email("wrongUser@test.com").password("wrongPassword")
-                        .build());
-
-        // when
-
-        // then
-        org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () -> emailMetadataService.createEmailMetadata(wrongCreateDto));
+        assertThat(emailInfoList).isEqualTo(Arrays.asList(emailMetadata1, emailMetadata2));
     }
 
     @Test
     @WithMockUser(username = USERNAME, password = PASSWORD)
     public void UserEmailInfoService_createUserEmailInfo__DUPLICATE() throws Exception {
         // given
-        MailMetadataCreateDto duplicateCreateDto = createTestDto("test@testEmail.com", testUser);
+        EmailMetadataCreateDto duplicateCreateDto = testEmailMetadataCreateDto("test@testEmail.com");
         // when
         EmailMetadata emailMetadata = emailMetadataService.createEmailMetadata(duplicateCreateDto);
 

@@ -1,6 +1,5 @@
 package com.example.mailService.email;
 
-import com.example.mailService.base.BaseTestSetup;
 import com.example.mailService.email.dto.EmailCreateDto;
 import com.example.mailService.email.entity.Email;
 import com.example.mailService.email.entity.EmailMetadata;
@@ -9,6 +8,7 @@ import com.example.mailService.repository.EmailMetadataRepository;
 import com.example.mailService.utils.MailSender;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -27,7 +27,8 @@ import static org.mockito.Mockito.*;
 @Transactional
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest
-class EmailSendServiceTest extends BaseTestSetup {
+@DisplayName("EmailSendService")
+class EmailSendServiceTest extends EmailTestSetup {
 
     @InjectMocks
     private EmailSendService emailSendService;
@@ -60,32 +61,19 @@ class EmailSendServiceTest extends BaseTestSetup {
     protected void beforeEach() {
         super.beforeEach();
         testMetadata = metadataRepository.save(
-                EmailMetadata.builder()
-                        .email("testUser@testMail.com")
-                        .username("testUser")
-                        .password("testPassword")
-                        .smtpHost("smtp.testMail.com")
-                        .smtpPort(465L)
-                        .user(testUser)
-                        .build()
-        );
+                testEmailMetadata(testUser.getEmail(), testUser));
     }
 
-    private EmailCreateDto testEmailCreateDto(EmailMetadata metadata, Long userId) {
-        return EmailCreateDto.builder()
-                .emailFrom(metadata.getEmail())
-                .emailTo("to@otherMail.com")
-                .subject("This is Test mail")
-                .text("test mail text")
-                .userId(userId)
-                .emailToList("to@otherMail.com")
-                .emailCcList("cc1@otherMail.com, cc2@otherMail.com")
-                .emailBccList("bcc1@otherMail.com, bcc2@otherMail.com")
-                .build();
+    private EmailCreateDto testEmailCreateDto(EmailMetadata metadata) {
+        return testEmailCreateDto(
+                metadata.getEmail(), "to@otherMail.com",
+                "to other mail service",
+                "cc1@otherMail.com, cc2@otherMail.com", "bcc1@otherMail.com, bcc2@otherMail.com");
     }
 
     @Test
     @WithMockUser(username = USERNAME, password = PASSWORD)
+    @DisplayName("메일 전송 성공 테스트")
     public void EmailSendService__sendEmail__SUCCESS() throws Exception {
         // given
         // MailSender.sendMessage 는 mock 처리 (doNothing)
@@ -93,16 +81,18 @@ class EmailSendServiceTest extends BaseTestSetup {
         doNothing().when(mailSender).sendMessage(any(Message.class));
 
         // when
-        Email email = emailSendService.sendEmail(testEmailCreateDto(testMetadata, testUser.getId()));
+        Email email = emailSendService.sendEmail(testEmailCreateDto(testMetadata));
 
         // then
-        Email loadEmailById = emailService.loadEmailById(email.getId());
+        Email loadEmailById = emailService.loadEmailByIdAndUserId(email.getId())
+                .orElseThrow(() -> new RuntimeException("Error while running test"));
 
         assertThat(email).isEqualTo(loadEmailById);
     }
 
     @Test
     @WithMockUser(username = USERNAME, password = PASSWORD)
+    @DisplayName("메일 전송 실패 테스트: 다른 사용자 요청 & 존재하지 않은 데이터")
     public void EmailSendService__sendEmail__FAIL() throws Exception {
         // given
         createCompareUser();
@@ -121,8 +111,7 @@ class EmailSendServiceTest extends BaseTestSetup {
         // when
 
         // then
-        Assertions.assertThrows(IllegalArgumentException.class, () -> emailSendService.sendEmail(testEmailCreateDto(compareMetadata, compareUser.getId())));
-        Assertions.assertThrows(ResourceNotFoundException.class, () -> emailSendService.sendEmail(testEmailCreateDto(testMetadata, 9999L)));
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> emailSendService.sendEmail(testEmailCreateDto(compareMetadata)));
     }
 
 }

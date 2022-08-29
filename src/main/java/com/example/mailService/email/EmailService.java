@@ -7,10 +7,12 @@ import com.example.mailService.exception.ResourceNotFoundException;
 import com.example.mailService.repository.EmailRepository;
 import com.example.mailService.user.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -21,11 +23,19 @@ public class EmailService {
 
     private final UserService userService;
 
-    public List<Email> loadEmailListByUserId(Long userId) {
-        return emailRepository.findEmailsByUserId(userId);
+    public List<Email> loadEmailListByUserId() {
+        User requestUser = userService.loadUserFromSecurityContextHolder();
+        return emailRepository.findEmailsByUserId(requestUser.getId());
     }
 
-    public Email loadEmailById(Long mailId) throws ResourceNotFoundException {
+    public Optional<Email> loadEmailByIdAndUserId(Long mailId) {
+        User requestUser = userService.loadUserFromSecurityContextHolder();
+        return emailRepository.findEmailByIdAndUserId(mailId, requestUser.getId());
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public Email loadEmailById(Long mailId) {
+        // 어드민만 가능. 인증없이 메일 조회
         return emailRepository.findEmailById(mailId).orElseThrow(
                 () -> new ResourceNotFoundException("Email not found with Id: " + mailId)
         );
@@ -34,9 +44,7 @@ public class EmailService {
     @Transactional(readOnly = false)
     public Email createEmail(EmailCreateDto createDto) {
         User requestUser = userService.loadUserFromSecurityContextHolder();
-        if (createDto.getUserId().equals(requestUser.getId())) {
-            return emailRepository.save(createDto.toEntity());
-        } else throw new IllegalArgumentException("Request user is not equal. User: " + requestUser.getId() + ", Request:" + createDto.getUserId());
+        return emailRepository.save(createDto.toEntity(requestUser.getId()));
     }
 
     @Transactional(readOnly = false)
@@ -45,12 +53,9 @@ public class EmailService {
         // 조회 / 생성 / 삭제만 존재.
         // 삭제는 데이터 삭제 대신 userId를 null 로 표현
         // https://www.baeldung.com/spring-jpa-soft-delete
-        User requestUser = userService.loadUserFromSecurityContextHolder();
-        Email email = loadEmailById(emailId);
-        if (email.getId().equals(requestUser.getId())) {
-            // TODO: 메일 삭제 로직 실행
-            // TODO: JPA repository 를 통해 soft delete 를 적용해줘야함
-        }
+        Optional<Email> email = loadEmailByIdAndUserId(emailId);
+        // TODO: 메일 삭제 로직 실행
+        // TODO: JPA repository 를 통해 soft delete 를 적용해줘야함
     }
 
 }
