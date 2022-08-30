@@ -60,7 +60,7 @@ jobs:
         run: echo "VERSION=$(grep -oPm2 "(?<=<version>)[^<]+" pom.xml | sed -n 2p)" >> $GITHUB_ENV
       
       - name: Spring Boot Build with Maven
-        run: mvn package -Dskip.test=true
+        run: mvn --batch-mode --update-snapshots verify
         
       - name: Maven Cache
         uses: skjolber/maven-cache-github-action@v1.1

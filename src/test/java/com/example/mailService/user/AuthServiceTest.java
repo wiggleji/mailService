@@ -1,20 +1,17 @@
-package com.example.mailService.service;
+package com.example.mailService.user;
 
-import com.example.mailService.user.AuthService;
-import com.example.mailService.user.UserService;
+import com.example.mailService.base.BaseTestSetup;
 import com.example.mailService.user.dto.JwtTokenDto;
 import com.example.mailService.user.dto.UserLoginDto;
 import com.example.mailService.user.dto.UserSignUpDto;
 import com.example.mailService.user.entity.User;
-import com.example.mailService.user.entity.UserRole;
 import com.example.mailService.exception.UserAlreadyExistsException;
-import com.example.mailService.repository.UserRepository;
+import com.example.mailService.user.AuthService;
+import com.example.mailService.user.UserService;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
@@ -22,21 +19,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-class AuthServiceTest {
+class AuthServiceTest extends BaseTestSetup {
+
+    private final AuthService authService;
 
     @Autowired
-    private AuthService authService;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    private final String USERNAME = "testUser";
-    private final String EMAIL = "test@test.com";
-    private final String PASSWORD = "test1234";
-
+    public AuthServiceTest(AuthService authService) {
+        this.authService = authService;
+    }
 
     private UserLoginDto testUserLoginDto() {
         return UserLoginDto.builder()
@@ -66,22 +56,6 @@ class AuthServiceTest {
                 .email(email)
                 .password(PASSWORD)
                 .build();
-    }
-
-    @BeforeEach
-    private void beforeEach() {
-        // TODO: @BeforeAll 와 같이 테스트 데이터 setup 을 한번으로 끝낼 수는 없을까?
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
-        userService = new UserService(userRepository);
-
-        User testUser = User.builder()
-                .username(USERNAME)
-                .email(EMAIL)
-                .password(passwordEncoder.encode(PASSWORD))
-                .role(UserRole.ROLE_USER)
-                .build();
-        userRepository.save(testUser);
     }
 
     @Test
