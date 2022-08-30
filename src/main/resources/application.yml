@@ -2,9 +2,6 @@ authentication:
   secret-key: rvsf2Zk4adpAJ41rIesA4g==
   expiration-time: 864000000 # 1 day
 
-encryption:
-  secret-key: 8IkH2MXXEj+V+EVQsu40vQ==
-
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/email?serverTimezone=Asia/Seoul

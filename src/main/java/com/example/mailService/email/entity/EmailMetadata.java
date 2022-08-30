@@ -46,7 +46,7 @@ public class EmailMetadata extends BaseEntity {
     public void update(EmailMetadataUpdateDto updateDto) {
         this.email = updateDto.getEmail();
         this.username = updateDto.getUsername();
-        this.password = updateDto.getPassword();
+        this.password = Encryption.encryptAES256(updateDto.getPassword());
         this.smtpHost = updateDto.getSmtpHost();
         this.smtpPort = updateDto.getSmtpPort();
     }
