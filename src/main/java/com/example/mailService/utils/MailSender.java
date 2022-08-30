@@ -30,7 +30,7 @@ public class MailSender {
         return Session.getDefaultInstance(properties, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(metadata.getUsername(), metadata.getPassword());
+                return new PasswordAuthentication(metadata.getUsername(), Encryption.decryptAES256(metadata.getPassword()));
             }
         });
     }

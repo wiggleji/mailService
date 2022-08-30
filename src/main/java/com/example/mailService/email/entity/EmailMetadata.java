@@ -3,6 +3,7 @@ package com.example.mailService.email.entity;
 import com.example.mailService.email.dto.EmailMetadataUpdateDto;
 import com.example.mailService.user.entity.BaseEntity;
 import com.example.mailService.user.entity.User;
+import com.example.mailService.utils.Encryption;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -45,7 +46,7 @@ public class EmailMetadata extends BaseEntity {
     public void update(EmailMetadataUpdateDto updateDto) {
         this.email = updateDto.getEmail();
         this.username = updateDto.getUsername();
-        this.password = updateDto.getPassword();
+        this.password = Encryption.encryptAES256(updateDto.getPassword());
         this.smtpHost = updateDto.getSmtpHost();
         this.smtpPort = updateDto.getSmtpPort();
     }

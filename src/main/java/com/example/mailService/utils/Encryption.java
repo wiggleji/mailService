@@ -4,7 +4,6 @@ import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.crypto.Cipher;
-import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -40,11 +39,11 @@ public class Encryption {
         }
     }
 
-    public String decryptAES256(String cipherTextWithIdentifier) {
+    public String decryptAES256(String cipherTextWithSalt) {
         try {
-            if (cipherTextWithIdentifier.startsWith(encryptedSalt)) {
-                String cipherText = cipherTextWithIdentifier.substring(
-                        cipherTextWithIdentifier.lastIndexOf('/') + 1);
+            if (cipherTextWithSalt.startsWith(encryptedSalt)) {
+                String cipherText = cipherTextWithSalt.substring(
+                        cipherTextWithSalt.lastIndexOf("/") + 1);
                 Cipher cipher = Cipher.getInstance(ALGORITHM);
                 SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey.getBytes(), ALGORITHM);
                 cipher.init(Cipher.DECRYPT_MODE, secretKeySpec);
@@ -53,9 +52,9 @@ public class Encryption {
                 byte[] decrypted = cipher.doFinal(decodedBytes);
                 return new String(decrypted, StandardCharsets.UTF_8);
 
-            } else throw new IllegalArgumentException("Invalid cipherText: " + cipherTextWithIdentifier);
+            } else throw new IllegalArgumentException("Invalid cipherText: " + cipherTextWithSalt);
         } catch (Exception e) {
-            log.error("Error while decrypting value: " + cipherTextWithIdentifier);
+            log.error("Error while decrypting value: " + cipherTextWithSalt);
             throw new RuntimeException(e);
         }
     }
