@@ -23,12 +23,9 @@ class EmailMetadataServiceTest extends EmailTestSetup {
 //    @Autowired
     private final EmailMetadataService emailMetadataService;
 
-    private final Encryption encryption;
-
     @Autowired
-    public EmailMetadataServiceTest(EmailMetadataService emailMetadataService, Encryption encryption) {
+    public EmailMetadataServiceTest(EmailMetadataService emailMetadataService) {
         this.emailMetadataService = emailMetadataService;
-        this.encryption = encryption;
     }
 
     @Test
