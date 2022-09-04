@@ -24,13 +24,15 @@ public class MailSender {
 
     private final EmailMetadataService metadataService;
 
+    private final Encryption encryption;
+
     public Session generateMailSession(EmailMetadata metadata) {
         // 메일 전송을 위한 메일세션 생성
         Properties properties = metadataService.generateEmailMetadataProperty(metadata);
         return Session.getDefaultInstance(properties, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(metadata.getUsername(), Encryption.decryptAES256(metadata.getPassword()));
+                return new PasswordAuthentication(metadata.getUsername(), encryption.decryptAES256(metadata.getPassword()));
             }
         });
     }
