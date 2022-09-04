@@ -1,7 +1,11 @@
 package com.example.mailService.utils;
 
-import lombok.experimental.UtilityClass;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
@@ -9,18 +13,22 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 @Slf4j
-@UtilityClass
+@NoArgsConstructor
+@AllArgsConstructor
+@Component
 public class Encryption {
 
-    private final static String secretKey = "RB15AW0JUI7ZL8BX";
-    public static String ALGORITHM = "AES";
+    @Value("${encryption.secret-key}")
+    private String secretKey;
+    private String ALGORITHM = "AES";
 
-    private static final String encryptedSalt = "AES/" + secretKey.substring(0,4) + "/";
-
+    private String getEncryptedSalt() {
+        return "AES/" + secretKey.substring(0,4) + "/";
+    }
 
     public String encryptAES256(String text) {
         try {
-            if (text.startsWith(encryptedSalt)) {
+            if (text.startsWith(getEncryptedSalt())) {
                 // 암호화된 데이터는 그대로 반환
                 return text;
             } else {
@@ -30,7 +38,7 @@ public class Encryption {
                 cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
 
                 byte[] encrypted = cipher.doFinal(text.getBytes(StandardCharsets.UTF_8));
-                return encryptedSalt + Base64.getEncoder().withoutPadding().encodeToString(encrypted);
+                return getEncryptedSalt() + Base64.getEncoder().withoutPadding().encodeToString(encrypted);
 
             }
         } catch (Exception e) {
@@ -41,7 +49,7 @@ public class Encryption {
 
     public String decryptAES256(String cipherTextWithSalt) {
         try {
-            if (cipherTextWithSalt.startsWith(encryptedSalt)) {
+            if (cipherTextWithSalt.startsWith(getEncryptedSalt())) {
                 String cipherText = cipherTextWithSalt.substring(
                         cipherTextWithSalt.lastIndexOf("/") + 1);
                 Cipher cipher = Cipher.getInstance(ALGORITHM);

@@ -3,10 +3,9 @@ package com.example.mailService.email.dto;
 import com.example.mailService.user.entity.User;
 import com.example.mailService.email.entity.EmailMetadata;
 import com.example.mailService.utils.Encryption;
+import com.example.mailService.SpringContext;
 import lombok.Builder;
 import lombok.Getter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Getter
 @Builder
@@ -23,10 +22,12 @@ public class EmailMetadataCreateDto {
     private Long smtpPort;
 
     public EmailMetadata toEntity(User user) {
+        Encryption encryption = SpringContext.getBean(Encryption.class);
+
         return EmailMetadata.builder()
                 .email(email)
                 .username(username)
-                .password(Encryption.encryptAES256(password))
+                .password(encryption.encryptAES256(password))
                 .smtpHost(smtpHost)
                 .smtpPort(smtpPort)
                 .user(user)
