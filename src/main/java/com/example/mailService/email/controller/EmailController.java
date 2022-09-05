@@ -41,10 +41,4 @@ public class EmailController {
         return email.map(value -> new ResponseEntity<>(EmailDto.from(value), HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
-
-    @PostMapping("/send")
-    public ResponseEntity<EmailDto> sendEmail(@RequestBody EmailCreateDto createDto) {
-        Email email = emailSendService.sendEmail(createDto);
-        return new ResponseEntity<>(EmailDto.from(email), HttpStatus.CREATED);
-    }
 }
