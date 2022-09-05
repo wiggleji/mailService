@@ -138,29 +138,4 @@ class EmailControllerTest extends EmailTestSetup {
         EmailDto body = response.getBody();
         assertThat(body).isNull();
     }
-    @Test
-    @WithMockUser(username = USERNAME, password = PASSWORD)
-    @DisplayName("Java Mail API mocking 처리된 EmailController 메일전송 테스트")
-    public void EmailController__sendEmail__SUCCESS() throws Exception {
-        // given
-        EmailCreateDto createDto = testEmailCreateDto(
-                testUser.getEmail(),
-                "toOtherMail@test.com",
-                "testEmail",
-                "cc1@test1.com, cc2@test2.com",
-                "bcc1@test1.com, bcc2@test2.com"
-        );
-        doNothing().when(mailSender).sendMessage(any(Message.class));
-
-        // when
-        ResponseEntity<EmailDto> response = emailController.sendEmail(createDto);
-
-        // then
-        assertThat(response.getBody()).isNotNull();
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-
-        ResponseEntity<EmailDto> emailDetail = emailController.emailDetail(response.getBody().getId());
-        assertThat(emailDetail.getBody()).isNotNull();
-        assertThat(emailDetail.getBody().getSubject()).isEqualTo(createDto.getSubject());
-    }
 }
