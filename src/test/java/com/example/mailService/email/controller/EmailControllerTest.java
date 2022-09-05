@@ -138,9 +138,6 @@ class EmailControllerTest extends EmailTestSetup {
         EmailDto body = response.getBody();
         assertThat(body).isNull();
     }
-
-    // TODO: soft delete 적용 후 메일 삭제 로직 & 테스트케이스 작성
-
     @Test
     @WithMockUser(username = USERNAME, password = PASSWORD)
     @DisplayName("Java Mail API mocking 처리된 EmailController 메일전송 테스트")

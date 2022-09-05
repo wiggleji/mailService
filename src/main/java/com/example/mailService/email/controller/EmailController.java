@@ -42,12 +42,6 @@ public class EmailController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @DeleteMapping("/{emailId}")
-    public void emailDelete(@PathVariable Long emailId) {
-        // TODO: soft delete 적용 후 메일 삭제 로직 & 테스트케이스 작성
-        emailService.deleteEmail(emailId);
-    }
-
     @PostMapping("/send")
     public ResponseEntity<EmailDto> sendEmail(@RequestBody EmailCreateDto createDto) {
         Email email = emailSendService.sendEmail(createDto);

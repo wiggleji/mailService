@@ -61,6 +61,4 @@ public class EmailMetadataController {
             return new ResponseEntity<>(EmailMetadataDto.from(updateEmailMetadata), HttpStatus.OK);
         } else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-
-    // delete
 }
