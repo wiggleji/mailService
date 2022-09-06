@@ -36,15 +36,14 @@ class EmailMetadataServiceTest extends EmailTestSetup {
 
         // when
         EmailMetadata emailMetadata = emailMetadataService.createEmailMetadata(createDto);
-        Optional<EmailMetadata> retrieveEmailMetadata = emailMetadataService.loadEmailMetadataById(emailMetadata.getId());
+        EmailMetadata retrieveEmailMetadata = emailMetadataService.loadEmailMetadataById(emailMetadata.getId());
 
         // then
         assertThat(emailMetadata.getEmail()).isEqualTo("test@testEmail.com");
         assertThat(emailMetadata.getUser()).isEqualTo(testUser);
 
-        assertThat(retrieveEmailMetadata).isPresent();
-        assertThat(retrieveEmailMetadata.get().getUser()).isEqualTo(testUser);
-        assertThat(retrieveEmailMetadata.get().getId()).isEqualTo(emailMetadata.getId());
+        assertThat(retrieveEmailMetadata.getUser()).isEqualTo(testUser);
+        assertThat(retrieveEmailMetadata.getId()).isEqualTo(emailMetadata.getId());
         // TODO: 메일 전송 정보 양방향 암호화 (EventListener 혹은 별도 처리 로직 적용 필요)
 //        assertThat(encryption.decryptAES256(retrieveEmailMetadata.get().getPassword())).isEqualTo(createDto.getPassword());
     }

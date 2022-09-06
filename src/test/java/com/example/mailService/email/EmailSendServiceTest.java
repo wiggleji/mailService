@@ -84,8 +84,7 @@ class EmailSendServiceTest extends EmailTestSetup {
         Email email = emailSendService.sendEmail(testEmailCreateDto(testMetadata));
 
         // then
-        Email loadEmailById = emailService.loadEmailByIdAndUserId(email.getId())
-                .orElseThrow(() -> new RuntimeException("Error while running test"));
+        Email loadEmailById = emailService.loadEmailByIdAndUserId(email.getId());
 
         assertThat(email).isEqualTo(loadEmailById);
     }

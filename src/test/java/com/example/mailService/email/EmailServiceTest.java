@@ -53,8 +53,7 @@ class EmailServiceTest extends EmailTestSetup {
         Email newEmail = emailService.createEmail(testEmailDto1);
 
         // when
-        Email email = emailService.loadEmailByIdAndUserId(newEmail.getId())
-                .orElseThrow(() -> new RuntimeException("Error while running test"));
+        Email email = emailService.loadEmailByIdAndUserId(newEmail.getId());
 
         // then
         Assertions.assertThat(email.getId()).isEqualTo(newEmail.getId());
@@ -65,11 +64,9 @@ class EmailServiceTest extends EmailTestSetup {
     public void EmailService_loadEmailById__wrongId__empty__FAIL() throws Exception {
         // given
         Long wrongEmailId = 999999L;
-        Optional<Email> email = emailService.loadEmailByIdAndUserId(wrongEmailId);
-
         // when
 
         // then
-        Assertions.assertThat(email).isEmpty();
+        org.junit.jupiter.api.Assertions.assertThrows(ResourceNotFoundException.class, () -> emailService.loadEmailByIdAndUserId(wrongEmailId));
     }
 }
