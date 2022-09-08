@@ -5,6 +5,7 @@ import com.example.mailService.email.EmailTestSetup;
 import com.example.mailService.email.dto.EmailCreateDto;
 import com.example.mailService.email.dto.EmailDto;
 import com.example.mailService.email.entity.Email;
+import com.example.mailService.exception.ResourceNotFoundException;
 import com.example.mailService.repository.EmailMetadataRepository;
 import com.example.mailService.repository.EmailRepository;
 import com.example.mailService.utils.MailSender;
@@ -130,12 +131,8 @@ class EmailControllerTest extends EmailTestSetup {
         Email testMail1 = emailRepository.save(testEmail("testMail1", compareUser));
 
         // when
-        ResponseEntity<EmailDto> response = emailController.emailDetail(testMail1.getId());
 
         // then
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-
-        EmailDto body = response.getBody();
-        assertThat(body).isNull();
+        org.junit.jupiter.api.Assertions.assertThrows(ResourceNotFoundException.class, () -> emailController.emailDetail(testMail1.getId()));
     }
 }

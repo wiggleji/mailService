@@ -35,7 +35,7 @@ Authorization: Bearer {{authorizationKey}}
 }
 
 ### 실제 메일 전송
-POST http://localhost:8080/email/send/
+POST http://localhost:8080/email-send/send
 Content-Type: application/json
 Authorization: Bearer {{authorizationKey}}
 
@@ -48,3 +48,8 @@ Authorization: Bearer {{authorizationKey}}
   "subject": "testMailFromJava",
   "text": "실제 이메일전송테스트"
 }
+
+###
+GET http://127.0.0.1:8080/email/999
+Authorization: Bearer {{authorizationKey}}
+

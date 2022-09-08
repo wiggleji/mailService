@@ -10,18 +10,13 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Builder
 public class EmailMetadataUpdateDto {
-    @NotNull
     private String email;
 
-    @NotNull
     private String username;
 
-    @NotNull
     private String password;
 
-    @NotNull
     private String smtpHost;
 
-    @NotNull
     private Long smtpPort;
 }

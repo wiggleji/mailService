@@ -53,7 +53,7 @@ public class EmailSendService {
         }
     }
 
-    @Transactional
+    @Transactional(readOnly = false)
     public void sendMailByEmailCreateDto(EmailCreateDto createDto) throws MessagingException {
         // User & EmailMetadata 조회
         User requestUser = userService.loadUserFromSecurityContextHolder();

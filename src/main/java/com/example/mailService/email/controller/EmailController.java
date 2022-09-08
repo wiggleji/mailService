@@ -2,7 +2,6 @@ package com.example.mailService.email.controller;
 
 import com.example.mailService.email.EmailSendService;
 import com.example.mailService.email.EmailService;
-import com.example.mailService.email.dto.EmailCreateDto;
 import com.example.mailService.email.dto.EmailDto;
 import com.example.mailService.email.entity.Email;
 import com.example.mailService.user.UserService;
