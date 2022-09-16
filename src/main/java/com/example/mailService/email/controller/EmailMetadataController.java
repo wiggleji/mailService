@@ -46,19 +46,16 @@ public class EmailMetadataController {
 
     @GetMapping("/{metadataId}")
     public ResponseEntity<EmailMetadataDto> emailMetadataDetail(@PathVariable Long metadataId) {
-        Optional<EmailMetadata> metadata = metadataService.loadEmailMetadataById(metadataId);
-        return metadata.map(value -> new ResponseEntity<>(EmailMetadataDto.from(value), HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        EmailMetadata metadata = metadataService.loadEmailMetadataById(metadataId);
+        return new ResponseEntity<>(EmailMetadataDto.from(metadata), HttpStatus.OK);
     }
 
 
     // put
     @PutMapping("/{metadataId}")
     public ResponseEntity<EmailMetadataDto> emailMetadataUpdate(@PathVariable Long metadataId, @Valid @RequestBody EmailMetadataUpdateDto updateDto) {
-        Optional<EmailMetadata> metadata = metadataService.loadEmailMetadataById(metadataId);
-        if (metadata.isPresent()) {
-            EmailMetadata updateEmailMetadata = metadataService.updateEmailMetadata(metadata.get().getId(), updateDto);
-            return new ResponseEntity<>(EmailMetadataDto.from(updateEmailMetadata), HttpStatus.OK);
-        } else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        EmailMetadata metadata = metadataService.loadEmailMetadataById(metadataId);
+        EmailMetadata updateEmailMetadata = metadataService.updateEmailMetadata(metadata.getId(), updateDto);
+        return new ResponseEntity<>(EmailMetadataDto.from(updateEmailMetadata), HttpStatus.OK);
     }
 }

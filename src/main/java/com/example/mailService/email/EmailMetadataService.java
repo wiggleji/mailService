@@ -34,9 +34,12 @@ public class EmailMetadataService {
         return emailMetadataRepository.findAllByUser_Id(requestUser.getId());
     }
 
-    public Optional<EmailMetadata> loadEmailMetadataById(Long metadataId) {
+    public EmailMetadata loadEmailMetadataById(Long metadataId) {
         User requestUser = userService.loadUserFromSecurityContextHolder();
-        return emailMetadataRepository.findByIdAndUser_Id(metadataId, requestUser.getId());
+        Optional<EmailMetadata> emailMetadata = emailMetadataRepository.findByIdAndUser_Id(metadataId, requestUser.getId());
+        if (emailMetadata.isPresent())
+            return emailMetadata.get();
+        else throw new ResourceNotFoundException("EmailMetadata not found with id: " + metadataId + " userId: " + requestUser.getId());
     }
 
     public EmailMetadata loadEmailMetadataByEmailAndUserId(String email, Long userId) {
@@ -44,13 +47,16 @@ public class EmailMetadataService {
                 .orElseThrow(() -> new ResourceNotFoundException("EmailMetadata not found by email & userId: " + email + userId));
     }
 
+    public boolean emailMetadataExistsByEmailAndUserId(String email, Long userId) {
+        return emailMetadataRepository.findByEmailAndUser_Id(email, userId).isPresent();
+    }
+
     @Transactional(readOnly = false)
     public EmailMetadata createEmailMetadata(EmailMetadataCreateDto createDto) {
         // TODO: Java mail API 를 사용해서 유효한 메일 메타데이터 인지 검증해야함
         User requestUser = userService.loadUserFromSecurityContextHolder();
-        Optional<EmailMetadata> existingUserEmailInfo = emailMetadataRepository.findByEmailAndUser_Id(createDto.getEmail(), requestUser.getId());
-        if (existingUserEmailInfo.isPresent()) {
-            throw new ResourceAlreadyExistException("Resource already exist with: " + existingUserEmailInfo);
+        if (emailMetadataExistsByEmailAndUserId(createDto.getEmail(), requestUser.getId())) {
+            throw new ResourceAlreadyExistException("Resource already exist with info: " + createDto);
         } else return emailMetadataRepository.save(createDto.toEntity(requestUser));
     }
 
@@ -64,11 +70,13 @@ public class EmailMetadataService {
         return emailMetadataRepository.save(metadata);
     }
 
-    public boolean validMailMetadata(EmailCreateDto createDto) {
+    public void validMailMetadata(EmailCreateDto createDto) {
         // 요청자 정보와 메일 정보 검증
         User requestUser = userService.loadUserFromSecurityContextHolder();
         EmailMetadata emailMetadata = loadEmailMetadataByEmailAndUserId(createDto.getEmailFrom(), requestUser.getId());
-        return emailMetadata.getUser().equals(requestUser);
+        if (!emailMetadata.getUser().equals(requestUser)) {
+            throw new IllegalArgumentException("EmailMetadata is not equal to request metadata: " + createDto);
+        }
     }
 
     public Properties generateEmailMetadataProperty(EmailMetadata metadata) {

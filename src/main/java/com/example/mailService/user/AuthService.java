@@ -49,8 +49,7 @@ public class AuthService {
 
     @Transactional
     public User registerUser(UserSignUpDto signUpDto) throws UserAlreadyExistsException {
-        boolean userExists = userService.checkUserExistsByEmail(signUpDto.getEmail());
-        if (userExists) {
+        if (userService.checkUserExistsByEmail(signUpDto.getEmail())) {
             throw new UserAlreadyExistsException("User already exists with email: " + signUpDto.getEmail());
         } else {
             return userService.createUser(signUpDto);
