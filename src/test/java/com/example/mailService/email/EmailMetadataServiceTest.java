@@ -44,8 +44,18 @@ class EmailMetadataServiceTest extends EmailTestSetup {
 
         assertThat(retrieveEmailMetadata.getUser()).isEqualTo(testUser);
         assertThat(retrieveEmailMetadata.getId()).isEqualTo(emailMetadata.getId());
-        // TODO: 메일 전송 정보 양방향 암호화 (EventListener 혹은 별도 처리 로직 적용 필요)
-//        assertThat(encryption.decryptAES256(retrieveEmailMetadata.get().getPassword())).isEqualTo(createDto.getPassword());
+    }
+
+    @Test
+    @WithMockUser(username = USERNAME, password = PASSWORD)
+    public void UserEmailInfoService_createUserEmailInfo__ResourceAlreadyExistException__FAIL() throws Exception {
+        // given
+        EmailMetadataCreateDto duplicateCreateDto = testEmailMetadataCreateDto("test@testEmail.com");
+        // when
+        EmailMetadata emailMetadata = emailMetadataService.createEmailMetadata(duplicateCreateDto);
+
+        // then
+        org.junit.jupiter.api.Assertions.assertThrows(ResourceAlreadyExistException.class, () -> emailMetadataService.createEmailMetadata(duplicateCreateDto));
     }
 
     @Test
@@ -65,15 +75,4 @@ class EmailMetadataServiceTest extends EmailTestSetup {
         assertThat(emailInfoList).isEqualTo(Arrays.asList(emailMetadata1, emailMetadata2));
     }
 
-    @Test
-    @WithMockUser(username = USERNAME, password = PASSWORD)
-    public void UserEmailInfoService_createUserEmailInfo__DUPLICATE() throws Exception {
-        // given
-        EmailMetadataCreateDto duplicateCreateDto = testEmailMetadataCreateDto("test@testEmail.com");
-        // when
-        EmailMetadata emailMetadata = emailMetadataService.createEmailMetadata(duplicateCreateDto);
-
-        // then
-        org.junit.jupiter.api.Assertions.assertThrows(ResourceAlreadyExistException.class, () -> emailMetadataService.createEmailMetadata(duplicateCreateDto));
-    }
 }

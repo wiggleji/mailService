@@ -81,7 +81,7 @@ class EmailSendServiceTest extends EmailTestSetup {
     @Test
     @WithMockUser(username = USERNAME, password = PASSWORD)
     @DisplayName("메일 전송 성공 테스트")
-    public void EmailSendService__sendEmail__SUCCESS() throws Exception {
+    public void EmailSendService__sendEmail__validEmailMetadata__withMockingJavaMailApi__SUCCESS() throws Exception {
         // given
         // MailSender.sendMessage 는 mock 처리 (doNothing)
         // MailSender.sendMailByEmailCreateDto 를 포함한 그 외는 정상처리 (SpyBean)
@@ -116,8 +116,8 @@ class EmailSendServiceTest extends EmailTestSetup {
 
     @Test
     @WithMockUser(username = USERNAME, password = PASSWORD)
-    @DisplayName("메일 전송 실패 테스트: 다른 사용자 요청 & 존재하지 않은 데이터")
-    public void EmailSendService__sendEmail__FAIL() throws Exception {
+    @DisplayName("메일 전송 실패 테스트: 다른 사용자 요청 ResourceNotFoundException")
+    public void EmailSendService__sendEmail__ResourceNotFoundException__FAIL() throws Exception {
         // given
         createCompareUser();
         EmailMetadata compareMetadata = EmailMetadata.builder()
