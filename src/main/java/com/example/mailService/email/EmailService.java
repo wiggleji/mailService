@@ -7,7 +7,6 @@ import com.example.mailService.exception.ResourceNotFoundException;
 import com.example.mailService.repository.EmailRepository;
 import com.example.mailService.user.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,9 +27,12 @@ public class EmailService {
         return emailRepository.findEmailsByUserId(requestUser.getId());
     }
 
-    public Optional<Email> loadEmailByIdAndUserId(Long mailId) {
+    public Email loadEmailByIdAndUserId(Long mailId) {
         User requestUser = userService.loadUserFromSecurityContextHolder();
-        return emailRepository.findEmailByIdAndUserId(mailId, requestUser.getId());
+        Optional<Email> email = emailRepository.findEmailByIdAndUserId(mailId, requestUser.getId());
+        if (email.isPresent()) {
+            return email.get();
+        } else throw new ResourceNotFoundException("Email not found with id: " + mailId + " userId: " + requestUser.getId());
     }
 
     @Transactional(readOnly = false)

@@ -64,36 +64,60 @@ class EmailSendServiceTest extends EmailTestSetup {
                 testEmailMetadata(testUser.getEmail(), testUser));
     }
 
-    private EmailCreateDto testEmailCreateDto(EmailMetadata metadata) {
+    private EmailCreateDto testEmailCreateDtoWithCcBcc(EmailMetadata metadata) {
         return testEmailCreateDto(
                 metadata.getEmail(), "to@otherMail.com",
                 "to other mail service",
                 "cc1@otherMail.com, cc2@otherMail.com", "bcc1@otherMail.com, bcc2@otherMail.com");
     }
 
+    private EmailCreateDto testEmailCreateDtoNoCcBcc(EmailMetadata metadata) {
+        return testEmailCreateDto(
+                metadata.getEmail(), "to@otherMail.com",
+                "to other mail service",
+                null, null);
+    }
+
     @Test
     @WithMockUser(username = USERNAME, password = PASSWORD)
     @DisplayName("메일 전송 성공 테스트")
-    public void EmailSendService__sendEmail__SUCCESS() throws Exception {
+    public void EmailSendService__sendEmail__validEmailMetadata__withMockingJavaMailApi__SUCCESS() throws Exception {
         // given
         // MailSender.sendMessage 는 mock 처리 (doNothing)
         // MailSender.sendMailByEmailCreateDto 를 포함한 그 외는 정상처리 (SpyBean)
         doNothing().when(mailSender).sendMessage(any(Message.class));
 
         // when
-        Email email = emailSendService.sendEmail(testEmailCreateDto(testMetadata));
+        Email email = emailSendService.sendEmail(testEmailCreateDtoWithCcBcc(testMetadata));
 
         // then
-        Email loadEmailById = emailService.loadEmailByIdAndUserId(email.getId())
-                .orElseThrow(() -> new RuntimeException("Error while running test"));
+        Email loadEmailById = emailService.loadEmailByIdAndUserId(email.getId());
 
         assertThat(email).isEqualTo(loadEmailById);
     }
 
     @Test
     @WithMockUser(username = USERNAME, password = PASSWORD)
-    @DisplayName("메일 전송 실패 테스트: 다른 사용자 요청 & 존재하지 않은 데이터")
-    public void EmailSendService__sendEmail__FAIL() throws Exception {
+    @DisplayName("메일 전송 성공 테스트")
+    public void EmailSendService__sendEmail__noCcBcc__SUCCESS() throws Exception {
+        // given
+        // MailSender.sendMessage 는 mock 처리 (doNothing)
+        // MailSender.sendMailByEmailCreateDto 를 포함한 그 외는 정상처리 (SpyBean)
+        doNothing().when(mailSender).sendMessage(any(Message.class));
+
+        // when
+        Email email = emailSendService.sendEmail(testEmailCreateDtoNoCcBcc(testMetadata));
+
+        // then
+        Email loadEmailById = emailService.loadEmailByIdAndUserId(email.getId());
+
+        assertThat(email).isEqualTo(loadEmailById);
+    }
+
+    @Test
+    @WithMockUser(username = USERNAME, password = PASSWORD)
+    @DisplayName("메일 전송 실패 테스트: 다른 사용자 요청 ResourceNotFoundException")
+    public void EmailSendService__sendEmail__ResourceNotFoundException__FAIL() throws Exception {
         // given
         createCompareUser();
         EmailMetadata compareMetadata = EmailMetadata.builder()
@@ -111,7 +135,7 @@ class EmailSendServiceTest extends EmailTestSetup {
         // when
 
         // then
-        Assertions.assertThrows(ResourceNotFoundException.class, () -> emailSendService.sendEmail(testEmailCreateDto(compareMetadata)));
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> emailSendService.sendEmail(testEmailCreateDtoWithCcBcc(compareMetadata)));
     }
 
 }

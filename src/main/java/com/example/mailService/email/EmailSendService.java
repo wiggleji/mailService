@@ -38,15 +38,14 @@ public class EmailSendService {
         try {
             // 메일 전송
             // 1. 메일 정보 조회 & 검증
-            if (emailMetadataService.validMailMetadata(createDto)) {
+            emailMetadataService.validMailMetadata(createDto);
 
-                // 2. 메일 전송
-                sendMailByEmailCreateDto(createDto);
+            // 2. 메일 전송
+            sendMailByEmailCreateDto(createDto);
 
-                // 3. 메일 전송 후 Email Entity 저장
-                return emailService.createEmail(createDto);
+            // 3. 메일 전송 후 Email Entity 저장
+            return emailService.createEmail(createDto);
 
-            } else throw new IllegalArgumentException("EmailMetadata is not equal to request metadata: " + createDto);
         } catch (MessagingException e) {
             log.error("Error while sending Email: " + createDto);
             e.getStackTrace();
@@ -54,12 +53,13 @@ public class EmailSendService {
         }
     }
 
-    @Transactional
+    @Transactional(readOnly = false)
     public void sendMailByEmailCreateDto(EmailCreateDto createDto) throws MessagingException {
+        // User & EmailMetadata 조회
+        User requestUser = userService.loadUserFromSecurityContextHolder();
+        EmailMetadata metadata = emailMetadataService.loadEmailMetadataByEmailAndUserId(createDto.getEmailFrom(), requestUser.getId());
+
         try {
-            User requestUser = userService.loadUserFromSecurityContextHolder();
-            // EmailCreateDto 로부터 metadata 조회
-            EmailMetadata metadata = emailMetadataService.loadEmailMetadataByEmailAndUserId(createDto.getEmailFrom(), requestUser.getId());
             // Java Mail API session/message 생성
             Session session = mailSender.generateMailSession(metadata);
             Message message = mailSender.generateMessage(session, createDto.toEmailMessageDto());

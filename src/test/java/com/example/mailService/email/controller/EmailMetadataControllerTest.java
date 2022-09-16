@@ -6,6 +6,7 @@ import com.example.mailService.email.dto.EmailMetadataDto;
 import com.example.mailService.email.dto.EmailMetadataUpdateDto;
 import com.example.mailService.email.entity.EmailMetadata;
 import com.example.mailService.exception.ResourceAlreadyExistException;
+import com.example.mailService.exception.ResourceNotFoundException;
 import com.example.mailService.repository.EmailMetadataRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -135,10 +136,10 @@ class EmailMetadataControllerTest extends EmailTestSetup {
         EmailMetadata metadata = metadataRepository.save(createDto);
 
         // when
-        ResponseEntity<EmailMetadataDto> response = metadataController.emailMetadataDetail(metadata.getId());
 
         // then
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        org.junit.jupiter.api.Assertions.assertThrows(ResourceNotFoundException.class, () -> metadataController.emailMetadataDetail(metadata.getId()));
+
     }
 
 
