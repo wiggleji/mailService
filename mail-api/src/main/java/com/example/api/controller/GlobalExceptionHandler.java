@@ -1,6 +1,6 @@
-package com.example.core.controller;
+package com.example.api.controller;
 
-import com.example.core.dto.ErrorResponse;
+import com.example.api.dto.ErrorResponse;
 import com.example.core.exception.ResourceNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
