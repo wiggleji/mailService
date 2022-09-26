@@ -1,0 +1,24 @@
+authentication:
+  secret-key: rvsf2Zk4adpAJ41rIesA4g==
+  expiration-time: 864000000 # 1 day
+
+encryption:
+  secret-key: RB15AW0JUI7ZL8BX
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/email?serverTimezone=Asia/Seoul
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: test1234
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+    generate-ddl: true
+    show-sql: true
+
+logging:
+  level:
+    org.springframework.transaction: TRACE
