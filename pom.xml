@@ -5,9 +5,9 @@
 	<packaging>pom</packaging>
 	<modules>
 		<module>core</module>
-		<module>api</module>
-		<module>mail-send</module>
-	</modules>
+		<module>mail-api</module>
+        <module>mail-service</module>
+    </modules>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
@@ -22,4 +22,5 @@
 	<properties>
 		<java.version>1.8</java.version>
 	</properties>
+
 </project>
