@@ -4,22 +4,25 @@ version: "2"
 
 services:
   zookeeper:
-    image: docker.io/bitnami/zookeeper:3.8
+    image: wurstmeister/zookeeper
+    container_name: mail-zookeeper
     ports:
       - "2181:2181"
     volumes:
-      - "zookeeper_data:/bitnami"
+      - "zookeeper_data:/mail_zookeeper"
     environment:
       - ALLOW_ANONYMOUS_LOGIN=yes
   kafka:
-    image: docker.io/bitnami/kafka:3.2
+    image: wurstmeister/kafka
+    container_name: mail-kafka
     ports:
       - "9092:9092"
     volumes:
-      - "kafka_data:/bitnami"
+      - "kafka_data:/mail_kafka"
     environment:
-      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
-      - ALLOW_PLAINTEXT_LISTENER=yes
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: PLAINTEXT://:9092
+      KAFKA_CREATE_TOPICS: "mail-direct:1:1,mail-schedule:1:1"
     depends_on:
       - zookeeper
 
