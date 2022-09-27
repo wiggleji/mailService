@@ -20,9 +20,10 @@ spring:
     show-sql: true
 
   kafka:
+    bootstrap-servers: localhost:9092
     template:
       email-direct: email-direct
-      mail-schedule: mail-schedule
+      email-schedule: email-schedule
     consumer:
       bootstrap-servers: localhost:9092
       group-id: email

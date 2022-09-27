@@ -3,6 +3,7 @@ package com.example.api.email;
 import com.example.api.email.dto.EmailCreateDto;
 import com.example.api.email.dto.EmailMetadataCreateDto;
 import com.example.api.email.dto.EmailMetadataUpdateDto;
+import com.example.api.email.dto.EmailRequestDto;
 import com.example.core.entity.user.User;
 import com.example.core.entity.email.EmailMetadata;
 import com.example.core.exception.ResourceAlreadyExistException;
@@ -78,6 +79,15 @@ public class EmailMetadataService {
         EmailMetadata emailMetadata = loadEmailMetadataByEmailAndUserId(createDto.getEmailFrom(), requestUser.getId());
         if (!emailMetadata.getUser().equals(requestUser)) {
             throw new IllegalArgumentException("EmailMetadata is not equal to request metadata: " + createDto);
+        }
+    }
+
+    public void validMailMetadata(EmailRequestDto requestDto) {
+        // 요청자 정보와 메일 정보 검증
+        User requestUser = userService.loadUserFromSecurityContextHolder();
+        EmailMetadata emailMetadata = loadEmailMetadataByEmailAndUserId(requestDto.getEmailFrom(), requestUser.getId());
+        if (!emailMetadata.getUser().equals(requestUser)) {
+            throw new IllegalArgumentException("EmailMetadata is not equal to request metadata: " + requestDto);
         }
     }
 

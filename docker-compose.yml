@@ -22,7 +22,7 @@ services:
     environment:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_LISTENERS: PLAINTEXT://:9092
-      KAFKA_CREATE_TOPICS: "mail-direct:1:1,mail-schedule:1:1"
+      KAFKA_CREATE_TOPICS: "email-direct:1:1,email-schedule:1:1"
     depends_on:
       - zookeeper
 
