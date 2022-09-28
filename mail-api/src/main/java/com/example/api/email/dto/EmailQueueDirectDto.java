@@ -33,7 +33,7 @@ public class EmailQueueDirectDto {
     private LocalDateTime dateTimeReceive = LocalDateTime.now();
 
     public String getStringUuid() {
-        return (this.userId.toString() + dateTimeSend.toInstant(ZoneOffset.ofTotalSeconds(0)).toString());
+        return (this.userId.toString() + "--" + dateTimeSend.toInstant(ZoneOffset.ofTotalSeconds(0)).toString());
     }
 
     public Email toEntity(EmailFolder emailFolder) {

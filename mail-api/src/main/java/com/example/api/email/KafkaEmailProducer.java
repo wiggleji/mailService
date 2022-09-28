@@ -2,6 +2,7 @@ package com.example.api.email;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.kafka.support.SendResult;
@@ -12,11 +13,15 @@ import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
 @Slf4j
-@RequiredArgsConstructor
 @Component
 public class KafkaEmailProducer {
 
-    private KafkaTemplate<String, Object> kafkaTemplate;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
+
+    @Autowired
+    public KafkaEmailProducer(KafkaTemplate<String, Object> kafkaTemplate) {
+        this.kafkaTemplate = kafkaTemplate;
+    }
 
     public void sendMessage(String topicName, String messageKey, Object message) {
 

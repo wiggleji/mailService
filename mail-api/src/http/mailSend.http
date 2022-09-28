@@ -35,14 +35,14 @@ Authorization: Bearer {{authorizationKey}}
 }
 
 ### 실제 메일 전송
-POST http://localhost:8080/email-send/send
+POST http://localhost:8080/email-send/queue
 Content-Type: application/json
 Authorization: Bearer {{authorizationKey}}
 
 {
   "emailFrom": "{{email}}",
-  "emailTo": "roamgom@gmail.com",
-  "emailToList": "roamgom@gmail.com",
+  "emailTo": "{{email-to}}",
+  "emailToList": "{{email-to-list}}",
   "emailCcList": "",
   "emailBccList": "",
   "subject": "testMailFromJava",

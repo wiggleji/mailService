@@ -15,9 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
+@Deprecated
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/email-send")
+@RequestMapping("/email-depreated")
 @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
 public class EmailSendController {
 

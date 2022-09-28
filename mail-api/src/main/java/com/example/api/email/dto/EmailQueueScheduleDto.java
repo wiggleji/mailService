@@ -23,6 +23,6 @@ public class EmailQueueScheduleDto {
     }
 
     public String getStringUuid() {
-        return (this.id.toString() + dateTimeSend.toInstant(ZoneOffset.ofTotalSeconds(0)).toString());
+        return (this.id.toString() + "--" + dateTimeSend.toInstant(ZoneOffset.ofTotalSeconds(0)).toString());
     }
 }

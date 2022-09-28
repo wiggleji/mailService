@@ -5,6 +5,9 @@ authentication:
 encryption:
   secret-key: RB15AW0JUI7ZL8BX
 
+server:
+  port: 8090
+
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/email?serverTimezone=Asia/Seoul
