@@ -19,4 +19,12 @@ public class GlobalExceptionHandler {
                 .datetimeResponse(LocalDateTime.now())
                 .build();
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ErrorResponse handleResourceNotFoundException(IllegalArgumentException e) {
+        return ErrorResponse.builder()
+                .errorMessage(e.getMessage())
+                .datetimeResponse(LocalDateTime.now())
+                .build();
+    }
 }

@@ -23,7 +23,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> userLogin(@Valid @RequestBody UserLoginDto loginDto) {
+    public ResponseEntity<?> userLogin(@RequestBody UserLoginDto loginDto) {
         JwtTokenDto tokenDto = authService.loginUser(loginDto);
 
         if (Objects.isNull(tokenDto)) {

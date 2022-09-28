@@ -24,6 +24,9 @@ public class Email extends BaseEntity {
     private Long userId;
 
     @Column(nullable = false)
+    private EmailFolder emailFolder;
+
+    @Column(nullable = false)
     private String emailFrom;
 
     @Column(nullable = false)

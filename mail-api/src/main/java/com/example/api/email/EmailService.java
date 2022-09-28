@@ -1,6 +1,7 @@
 package com.example.api.email;
 
 import com.example.api.email.dto.EmailCreateDto;
+import com.example.api.email.dto.EmailRequestDto;
 import com.example.core.entity.email.Email;
 import com.example.core.entity.user.User;
 import com.example.core.exception.ResourceNotFoundException;
@@ -39,5 +40,11 @@ public class EmailService {
     public Email createEmail(EmailCreateDto createDto) {
         User requestUser = userService.loadUserFromSecurityContextHolder();
         return emailRepository.save(createDto.toEntity(requestUser.getId()));
+    }
+
+    @Transactional(readOnly = false)
+    public Email createScheduledEmail(EmailRequestDto requestDto) {
+        User requestUser = userService.loadUserFromSecurityContextHolder();
+        return emailRepository.save(requestDto.toScheduledEmailEntity(requestUser.getId()));
     }
 }

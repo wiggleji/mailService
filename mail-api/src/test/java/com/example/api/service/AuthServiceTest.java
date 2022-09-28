@@ -14,6 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -114,10 +115,9 @@ class AuthServiceTest {
     }
 
     @Test
-    public void UserService_loginUser_SUCCESS() throws Exception {
+    public void UserService_loginUser__wrongUser_null__FAIL() throws Exception {
         // given
         UserLoginDto loginDto = testUserLoginDto("WRONG_USERNAME");
-
         // when
 
         // then
@@ -125,7 +125,7 @@ class AuthServiceTest {
     }
 
     @Test
-    public void UserService_loginUser_FAIL() throws Exception {
+    public void UserService_loginUser_SUCCESS() throws Exception {
         // given
         UserLoginDto loginDto = testUserLoginDto();
 
