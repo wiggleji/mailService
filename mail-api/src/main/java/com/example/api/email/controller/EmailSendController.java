@@ -1,9 +1,11 @@
 package com.example.api.email.controller;
 
+import com.example.api.email.EmailQueueService;
 import com.example.api.email.EmailSendService;
 import com.example.api.email.EmailService;
 import com.example.api.email.dto.EmailCreateDto;
 import com.example.api.email.dto.EmailDto;
+import com.example.api.email.dto.EmailRequestDto;
 import com.example.core.entity.email.Email;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,20 +17,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Deprecated
+
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/email-depreated")
+@RequestMapping("/email-send")
 @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
 public class EmailSendController {
 
     private final EmailService emailService;
 
-    private final EmailSendService emailSendService;
+    private final EmailQueueService emailQueueService;
 
-    @PostMapping("/send")
-    public ResponseEntity<EmailDto> sendEmail(@RequestBody EmailCreateDto createDto) {
-        Email email = emailSendService.sendEmail(createDto);
-        return new ResponseEntity<>(EmailDto.from(email), HttpStatus.CREATED);
+    @PostMapping("/")
+    public ResponseEntity<EmailRequestDto> sendEmail(@RequestBody EmailRequestDto requestDto) {
+//        Email email = emailSendService.sendEmail(createDto);
+        EmailRequestDto queueEmail = emailQueueService.queueEmail(requestDto);
+        return new ResponseEntity<>(queueEmail, HttpStatus.CREATED);
     }
 }

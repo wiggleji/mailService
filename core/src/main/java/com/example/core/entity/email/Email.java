@@ -46,4 +46,8 @@ public class Email extends BaseEntity {
     private LocalDateTime dateTimeSend;
 
     private LocalDateTime dateTimeReceive;
+
+    public void updateEmailFolder(EmailFolder emailFolder) {
+        this.emailFolder = emailFolder;
+    }
 }

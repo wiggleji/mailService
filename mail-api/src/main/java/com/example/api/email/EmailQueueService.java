@@ -1,14 +1,11 @@
 package com.example.api.email;
 
 import com.example.api.email.dto.EmailQueueDirectDto;
-import com.example.api.email.dto.EmailQueueScheduleDto;
 import com.example.api.email.dto.EmailRequestDto;
 import com.example.api.user.UserService;
 import com.example.core.entity.email.Email;
 import com.example.core.entity.user.User;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,27 +39,24 @@ public class EmailQueueService {
 
         if (requestDto.getDateTimeSend().isAfter(LocalDateTime.now())) {
             // 예약전송: 전송시간 > 현재시간
-            return queueScheduleEmail(requestDto);
+            // 예약 메일 생성
+            return createScheduleEmailEntity(requestDto);
         } else {
             // 즉시전송: 전송시간 <= 현재시간
             return queueDirectEmail(requestDto);
         }
     }
 
-    private EmailRequestDto queueScheduleEmail(EmailRequestDto requestDto) {
+    private EmailRequestDto createScheduleEmailEntity(EmailRequestDto requestDto) {
         // 예약 전송
         // EmailFolder=SCHEDULED 로 email Entity 저장
-        // {UUID:(emailId+dateTimeSend).toString} : {emailId, dateTimeSend} -> queue
         Email emailScheduled = emailService.createScheduledEmail(requestDto);
-        EmailQueueScheduleDto scheduleDto = EmailQueueScheduleDto.fromEmailEntity(emailScheduled);
-        // Kafka producer 등록
-        kafkaEmailProducer.sendMessage("email-schedule", scheduleDto.getStringUuid(), scheduleDto);
-
         // 생성 내역 반환
         return requestDto;
     }
 
     private EmailRequestDto queueDirectEmail(EmailRequestDto requestDto) {
+        // 즉시 전송
         // Kafka producer 등록
         // {UUID:(userId+dateTimeSend).toString}: {userId 포함한 메일 데이터} -> queue
         User requestUser = userService.loadUserFromSecurityContextHolder();

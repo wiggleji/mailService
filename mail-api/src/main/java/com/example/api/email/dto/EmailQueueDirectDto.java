@@ -4,7 +4,12 @@ import com.example.core.entity.email.Email;
 import com.example.core.entity.email.EmailFolder;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.util.StringUtils;
 
+import javax.mail.Address;
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
