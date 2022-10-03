@@ -73,15 +73,6 @@ public class EmailMetadataService {
         return emailMetadataRepository.save(metadata);
     }
 
-    public void validMailMetadata(EmailCreateDto createDto) {
-        // 요청자 정보와 메일 정보 검증
-        User requestUser = userService.loadUserFromSecurityContextHolder();
-        EmailMetadata emailMetadata = loadEmailMetadataByEmailAndUserId(createDto.getEmailFrom(), requestUser.getId());
-        if (!emailMetadata.getUser().equals(requestUser)) {
-            throw new IllegalArgumentException("EmailMetadata is not equal to request metadata: " + createDto);
-        }
-    }
-
     public void validMailMetadata(EmailRequestDto requestDto) {
         // 요청자 정보와 메일 정보 검증
         User requestUser = userService.loadUserFromSecurityContextHolder();

@@ -24,7 +24,6 @@ class EmailServiceTest extends EmailTestSetup {
         this.emailService = emailService;
     }
 
-    @Test
     @WithMockUser(username = USERNAME, password = PASSWORD)
     public void EmailService_loadEmailListByUserId() throws Exception {
         // given
@@ -43,7 +42,6 @@ class EmailServiceTest extends EmailTestSetup {
         Assertions.assertThat(emailList).isEqualTo(Arrays.asList(email1, email2));
     }
 
-    @Test
     @WithMockUser(username = USERNAME, password = PASSWORD)
     public void EmailService_createEmail_loadEmailById() throws Exception {
         // given

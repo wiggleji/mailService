@@ -5,6 +5,7 @@ import com.example.api.email.dto.EmailCreateDto;
 import com.example.api.email.dto.EmailMetadataCreateDto;
 import com.example.api.email.dto.EmailMetadataUpdateDto;
 import com.example.core.entity.email.Email;
+import com.example.core.entity.email.EmailFolder;
 import com.example.core.entity.email.EmailMetadata;
 import com.example.core.entity.user.User;
 
@@ -13,6 +14,7 @@ public class EmailTestSetup extends BaseTestSetup {
     public Email testEmail(String subject, User user) {
         return Email.builder()
                 .userId(user.getId())
+                .emailFolder(EmailFolder.INBOX)
                 .emailFrom(user.getEmail())
                 .emailTo("otherUser@to.com")
                 .emailToList("otherUser@to.com")

@@ -1,12 +1,8 @@
 package com.example.api.email.controller;
 
 import com.example.api.email.EmailQueueService;
-import com.example.api.email.EmailSendService;
 import com.example.api.email.EmailService;
-import com.example.api.email.dto.EmailCreateDto;
-import com.example.api.email.dto.EmailDto;
 import com.example.api.email.dto.EmailRequestDto;
-import com.example.core.entity.email.Email;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

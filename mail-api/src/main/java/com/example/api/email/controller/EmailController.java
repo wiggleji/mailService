@@ -1,6 +1,5 @@
 package com.example.api.email.controller;
 
-import com.example.api.email.EmailSendService;
 import com.example.api.email.EmailService;
 import com.example.api.email.dto.EmailDto;
 import com.example.core.entity.email.Email;
@@ -20,8 +19,6 @@ import java.util.List;
 public class EmailController {
 
     private final EmailService emailService;
-
-    private final EmailSendService emailSendService;
 
     @GetMapping("/")
     public ResponseEntity<List<EmailDto>> emailList() {

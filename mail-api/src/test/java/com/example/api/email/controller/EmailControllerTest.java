@@ -1,6 +1,5 @@
 package com.example.api.email.controller;
 
-import com.example.api.email.EmailSendService;
 import com.example.api.email.EmailTestSetup;
 import com.example.api.email.MailSender;
 import com.example.api.email.dto.EmailDto;
@@ -12,7 +11,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -42,16 +40,12 @@ class EmailControllerTest extends EmailTestSetup {
     @SpyBean
     private MailSender mailSender;
 
-    @InjectMocks
-    private EmailSendService emailSendService;
-
     @Autowired
-    public EmailControllerTest(EmailController emailController, EmailRepository emailRepository, EmailMetadataRepository metadataRepository, MailSender mailSender, EmailSendService emailSendService) {
+    public EmailControllerTest(EmailController emailController, EmailRepository emailRepository, EmailMetadataRepository metadataRepository, MailSender mailSender) {
         this.emailController = emailController;
         this.emailRepository = emailRepository;
         this.metadataRepository = metadataRepository;
         this.mailSender = mailSender;
-        this.emailSendService = emailSendService;
     }
 
 
