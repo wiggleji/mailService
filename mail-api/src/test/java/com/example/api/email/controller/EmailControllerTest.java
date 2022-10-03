@@ -1,7 +1,6 @@
 package com.example.api.email.controller;
 
 import com.example.api.email.EmailTestSetup;
-import com.example.api.email.MailSender;
 import com.example.api.email.dto.EmailDto;
 import com.example.core.entity.email.Email;
 import com.example.core.exception.ResourceNotFoundException;
@@ -14,7 +13,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -37,15 +35,11 @@ class EmailControllerTest extends EmailTestSetup {
 
     private final EmailMetadataRepository metadataRepository;
 
-    @SpyBean
-    private MailSender mailSender;
-
     @Autowired
-    public EmailControllerTest(EmailController emailController, EmailRepository emailRepository, EmailMetadataRepository metadataRepository, MailSender mailSender) {
+    public EmailControllerTest(EmailController emailController, EmailRepository emailRepository, EmailMetadataRepository metadataRepository) {
         this.emailController = emailController;
         this.emailRepository = emailRepository;
         this.metadataRepository = metadataRepository;
-        this.mailSender = mailSender;
     }
 
 

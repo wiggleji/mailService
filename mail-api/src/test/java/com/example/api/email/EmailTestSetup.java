@@ -1,7 +1,6 @@
 package com.example.api.email;
 
 import com.example.api.base.BaseTestSetup;
-import com.example.api.email.dto.EmailCreateDto;
 import com.example.api.email.dto.EmailMetadataCreateDto;
 import com.example.api.email.dto.EmailMetadataUpdateDto;
 import com.example.core.entity.email.Email;
@@ -22,28 +21,6 @@ public class EmailTestSetup extends BaseTestSetup {
                 .emailBccList("bcc1@otherMail.com, bcc2@otherMail.com")
                 .subject(subject)
                 .text("test email text")
-                .build();
-    }
-
-
-    public EmailCreateDto testEmailCreateDto(String from, String to, String subject, String ccList, String bccList) {
-        return EmailCreateDto.builder()
-                .emailFrom(from)
-                .emailTo(to)
-                .subject(subject)
-                .text("Test Mail content")
-                .emailToList(to)
-                .emailCcList(ccList)
-                .emailBccList(bccList)
-                .build();
-    }
-
-    public EmailCreateDto testEmailCreateDto__NoCcBcc(String from, String to, String subject) {
-        return EmailCreateDto.builder()
-                .emailFrom(from)
-                .emailTo(to)
-                .subject(subject)
-                .text("Test Mail content")
                 .build();
     }
 

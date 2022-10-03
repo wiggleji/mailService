@@ -16,7 +16,7 @@ import java.util.Properties;
 @Getter
 @Component
 @AllArgsConstructor
-public class MailSender {
+public class EmailSender {
 
     private final EmailMetadataService metadataService;
 

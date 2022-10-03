@@ -1,6 +1,5 @@
 package com.example.api.email;
 
-import com.example.api.email.dto.EmailCreateDto;
 import com.example.api.email.dto.EmailMetadataCreateDto;
 import com.example.api.email.dto.EmailMetadataUpdateDto;
 import com.example.api.email.dto.EmailRequestDto;

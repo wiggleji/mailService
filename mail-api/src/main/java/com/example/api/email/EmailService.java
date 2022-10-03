@@ -1,6 +1,5 @@
 package com.example.api.email;
 
-import com.example.api.email.dto.EmailCreateDto;
 import com.example.api.email.dto.EmailRequestDto;
 import com.example.core.entity.email.Email;
 import com.example.core.entity.email.EmailFolder;
@@ -40,12 +39,6 @@ public class EmailService {
         if (email.isPresent()) {
             return email.get();
         } else throw new ResourceNotFoundException("Email not found with id: " + emailId + " userId: " + requestUser.getId());
-    }
-
-    @Transactional(readOnly = false)
-    public Email createEmail(EmailCreateDto createDto) {
-        User requestUser = userService.loadUserFromSecurityContextHolder();
-        return emailRepository.save(createDto.toEntity(requestUser.getId()));
     }
 
     @Transactional(readOnly = false)
