@@ -14,6 +14,8 @@ public class EmailDto {
 
     private Long id;
 
+    private Long userId;
+
     private String emailFrom;
 
     private String emailTo;
@@ -35,6 +37,7 @@ public class EmailDto {
     public static EmailDto from(Email email) {
         return EmailDto.builder()
                 .id(email.getId())
+                .userId(email.getUserId())
                 .emailFrom(email.getEmailFrom())
                 .emailTo(email.getEmailTo())
                 .emailToList(email.getEmailToList())

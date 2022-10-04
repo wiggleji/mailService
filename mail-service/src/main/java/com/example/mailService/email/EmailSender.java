@@ -1,5 +1,6 @@
-package com.example.api.email;
+package com.example.mailService.email;
 
+import com.example.api.email.EmailMetadataService;
 import com.example.api.email.dto.EmailMessageDto;
 import com.example.core.entity.email.EmailMetadata;
 import com.example.api.utils.Encryption;
@@ -16,7 +17,7 @@ import java.util.Properties;
 @Getter
 @Component
 @AllArgsConstructor
-public class MailSender {
+public class EmailSender {
 
     private final EmailMetadataService metadataService;
 

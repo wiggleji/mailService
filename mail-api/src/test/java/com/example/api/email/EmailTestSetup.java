@@ -1,10 +1,10 @@
 package com.example.api.email;
 
 import com.example.api.base.BaseTestSetup;
-import com.example.api.email.dto.EmailCreateDto;
 import com.example.api.email.dto.EmailMetadataCreateDto;
 import com.example.api.email.dto.EmailMetadataUpdateDto;
 import com.example.core.entity.email.Email;
+import com.example.core.entity.email.EmailFolder;
 import com.example.core.entity.email.EmailMetadata;
 import com.example.core.entity.user.User;
 
@@ -13,6 +13,7 @@ public class EmailTestSetup extends BaseTestSetup {
     public Email testEmail(String subject, User user) {
         return Email.builder()
                 .userId(user.getId())
+                .emailFolder(EmailFolder.INBOX)
                 .emailFrom(user.getEmail())
                 .emailTo("otherUser@to.com")
                 .emailToList("otherUser@to.com")
@@ -20,28 +21,6 @@ public class EmailTestSetup extends BaseTestSetup {
                 .emailBccList("bcc1@otherMail.com, bcc2@otherMail.com")
                 .subject(subject)
                 .text("test email text")
-                .build();
-    }
-
-
-    public EmailCreateDto testEmailCreateDto(String from, String to, String subject, String ccList, String bccList) {
-        return EmailCreateDto.builder()
-                .emailFrom(from)
-                .emailTo(to)
-                .subject(subject)
-                .text("Test Mail content")
-                .emailToList(to)
-                .emailCcList(ccList)
-                .emailBccList(bccList)
-                .build();
-    }
-
-    public EmailCreateDto testEmailCreateDto__NoCcBcc(String from, String to, String subject) {
-        return EmailCreateDto.builder()
-                .emailFrom(from)
-                .emailTo(to)
-                .subject(subject)
-                .text("Test Mail content")
                 .build();
     }
 

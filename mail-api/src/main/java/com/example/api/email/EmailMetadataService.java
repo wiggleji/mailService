@@ -1,6 +1,5 @@
 package com.example.api.email;
 
-import com.example.api.email.dto.EmailCreateDto;
 import com.example.api.email.dto.EmailMetadataCreateDto;
 import com.example.api.email.dto.EmailMetadataUpdateDto;
 import com.example.api.email.dto.EmailRequestDto;
@@ -71,15 +70,6 @@ public class EmailMetadataService {
         //   혹은 MetadataUpdateDto를 별도의 Entity로 바꾸어 처리할지
         metadata.update(updateDto.toUpdateEntity(metadataId));
         return emailMetadataRepository.save(metadata);
-    }
-
-    public void validMailMetadata(EmailCreateDto createDto) {
-        // 요청자 정보와 메일 정보 검증
-        User requestUser = userService.loadUserFromSecurityContextHolder();
-        EmailMetadata emailMetadata = loadEmailMetadataByEmailAndUserId(createDto.getEmailFrom(), requestUser.getId());
-        if (!emailMetadata.getUser().equals(requestUser)) {
-            throw new IllegalArgumentException("EmailMetadata is not equal to request metadata: " + createDto);
-        }
     }
 
     public void validMailMetadata(EmailRequestDto requestDto) {
