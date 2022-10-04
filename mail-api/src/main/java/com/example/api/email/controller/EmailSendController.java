@@ -24,7 +24,7 @@ public class EmailSendController {
 
     private final EmailQueueService emailQueueService;
 
-    @PostMapping("/")
+    @PostMapping("/queue")
     public ResponseEntity<EmailRequestDto> sendEmail(@RequestBody EmailRequestDto requestDto) {
 //        Email email = emailSendService.sendEmail(createDto);
         EmailRequestDto queueEmail = emailQueueService.queueEmail(requestDto);
