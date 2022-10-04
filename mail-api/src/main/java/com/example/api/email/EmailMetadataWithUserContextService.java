@@ -21,7 +21,7 @@ import java.util.Properties;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class EmailMetadataService {
+public class EmailMetadataWithUserContextService {
 
     private final EmailMetadataRepository emailMetadataRepository;
 

@@ -1,6 +1,6 @@
 package com.example.mailService.email;
 
-import com.example.api.email.EmailMetadataService;
+import com.example.api.email.EmailMetadataWithUserContextService;
 import com.example.api.email.dto.EmailMessageDto;
 import com.example.core.entity.email.EmailMetadata;
 import com.example.api.utils.Encryption;
@@ -19,7 +19,7 @@ import java.util.Properties;
 @AllArgsConstructor
 public class EmailSender {
 
-    private final EmailMetadataService metadataService;
+    private final EmailMetadataWithUserContextService metadataService;
 
     private final Encryption encryption;
 

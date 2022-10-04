@@ -18,16 +18,16 @@ public class EmailQueueService {
 
     private final UserService userService;
 
-    private final EmailService emailService;
+    private final EmailWithUserContextService emailWithUserContextService;
 
-    private final EmailMetadataService emailMetadataService;
+    private final EmailMetadataWithUserContextService emailMetadataWithUserContextService;
 
     private final KafkaEmailProducer kafkaEmailProducer;
 
-    public EmailQueueService(UserService userService, EmailService emailService, EmailMetadataService emailMetadataService, KafkaEmailProducer kafkaEmailProducer) {
+    public EmailQueueService(UserService userService, EmailWithUserContextService emailWithUserContextService, EmailMetadataWithUserContextService emailMetadataWithUserContextService, KafkaEmailProducer kafkaEmailProducer) {
         this.userService = userService;
-        this.emailService = emailService;
-        this.emailMetadataService = emailMetadataService;
+        this.emailWithUserContextService = emailWithUserContextService;
+        this.emailMetadataWithUserContextService = emailMetadataWithUserContextService;
         this.kafkaEmailProducer = kafkaEmailProducer;
     }
 
@@ -35,7 +35,7 @@ public class EmailQueueService {
     public EmailRequestDto queueEmail(EmailRequestDto requestDto) {
 
         // validate EmailMetadata with request User
-        emailMetadataService.validMailMetadata(requestDto);
+        emailMetadataWithUserContextService.validMailMetadata(requestDto);
 
         if (requestDto.getDateTimeSend().isAfter(LocalDateTime.now())) {
             // 예약전송: 전송시간 > 현재시간
@@ -50,7 +50,7 @@ public class EmailQueueService {
     private EmailRequestDto createScheduleEmailEntity(EmailRequestDto requestDto) {
         // 예약 전송
         // EmailFolder=SCHEDULED 로 email Entity 저장
-        Email emailScheduled = emailService.createScheduledEmail(requestDto);
+        Email emailScheduled = emailWithUserContextService.createScheduledEmail(requestDto);
         // 생성 내역 반환
         return requestDto;
     }

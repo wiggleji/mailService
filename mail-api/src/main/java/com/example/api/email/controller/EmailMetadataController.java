@@ -1,6 +1,6 @@
 package com.example.api.email.controller;
 
-import com.example.api.email.EmailMetadataService;
+import com.example.api.email.EmailMetadataWithUserContextService;
 import com.example.api.email.dto.EmailMetadataCreateDto;
 import com.example.api.email.dto.EmailMetadataDto;
 import com.example.api.email.dto.EmailMetadataUpdateDto;
@@ -21,7 +21,7 @@ import java.util.List;
 @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
 public class EmailMetadataController {
 
-    private final EmailMetadataService metadataService;
+    private final EmailMetadataWithUserContextService metadataService;
 
     // get-list
     @GetMapping("/")

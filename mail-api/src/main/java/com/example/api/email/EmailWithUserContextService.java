@@ -17,7 +17,7 @@ import java.util.Optional;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class EmailService {
+public class EmailWithUserContextService {
 
     private final EmailRepository emailRepository;
 
