@@ -22,13 +22,13 @@ public class EmailQueueService {
 
     private final EmailMetadataWithUserContextService emailMetadataWithUserContextService;
 
-    private final KafkaEmailProducer kafkaEmailProducer;
+    private final KafkaDirectEmailProducer kafkaDirectEmailProducer;
 
-    public EmailQueueService(UserService userService, EmailWithUserContextService emailWithUserContextService, EmailMetadataWithUserContextService emailMetadataWithUserContextService, KafkaEmailProducer kafkaEmailProducer) {
+    public EmailQueueService(UserService userService, EmailWithUserContextService emailWithUserContextService, EmailMetadataWithUserContextService emailMetadataWithUserContextService, KafkaDirectEmailProducer kafkaDirectEmailProducer) {
         this.userService = userService;
         this.emailWithUserContextService = emailWithUserContextService;
         this.emailMetadataWithUserContextService = emailMetadataWithUserContextService;
-        this.kafkaEmailProducer = kafkaEmailProducer;
+        this.kafkaDirectEmailProducer = kafkaDirectEmailProducer;
     }
 
     @Transactional(readOnly = false)
@@ -61,7 +61,7 @@ public class EmailQueueService {
         // {UUID:(userId+dateTimeSend).toString}: {userId 포함한 메일 데이터} -> queue
         User requestUser = userService.loadUserFromSecurityContextHolder();
         EmailQueueDirectDto directDto = requestDto.toEmailQueueDirectDto(requestUser.getId());
-        kafkaEmailProducer.sendMessage("email-direct", directDto.getStringUuid(), directDto);
+        kafkaDirectEmailProducer.sendMessage("email-direct", directDto.getStringUuid(), directDto);
 
         // 생성 내역 반환
         return requestDto;

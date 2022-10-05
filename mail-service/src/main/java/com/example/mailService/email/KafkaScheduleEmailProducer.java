@@ -1,7 +1,6 @@
-package com.example.api.email;
+package com.example.mailService.email;
 
-import com.example.core.dto.EmailQueueDirectDto;
-import lombok.RequiredArgsConstructor;
+import com.example.core.dto.EmailQueueScheduleDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -14,12 +13,15 @@ import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
 @Slf4j
-@RequiredArgsConstructor
 @Component
-public class KafkaEmailProducer {
+public class KafkaScheduleEmailProducer {
 
-    private final KafkaTemplate<String, EmailQueueDirectDto> kafkaTemplate;
+    private final KafkaTemplate<String, EmailQueueScheduleDto> kafkaTemplate;
 
+    @Autowired
+    public KafkaScheduleEmailProducer(KafkaTemplate<String, EmailQueueScheduleDto> kafkaTemplate) {
+        this.kafkaTemplate = kafkaTemplate;
+    }
 
     public void sendMessage(String topicName, String messageKey, Object message) {
 
@@ -29,18 +31,18 @@ public class KafkaEmailProducer {
                 .setHeader(KafkaHeaders.MESSAGE_KEY, messageKey)
                 .build();
 
-        ListenableFuture<SendResult<String, EmailQueueDirectDto>> future = kafkaTemplate.send(messageData);
+        ListenableFuture<SendResult<String, EmailQueueScheduleDto>> future = kafkaTemplate.send(messageData);
 
         future.addCallback(
                 new ListenableFutureCallback<SendResult<String, ?>>() {
                     @Override
                     public void onFailure(Throwable ex) {
-                        log.warn("Unable to send message: [" + messageData + "] due to: " + ex.getMessage());
+                        log.warn("[KafkaScheduleEmailProducer] Unable to send message: [" + messageData + "] due to: " + ex.getMessage());
                     }
 
                     @Override
                     public void onSuccess(SendResult<String, ?> result) {
-                        log.info("Succeed to send message: [" + messageData + "] | offset: [" + result.getRecordMetadata().offset() + "]");
+                        log.info("[KafkaScheduleEmailProducer] Succeed to send message: [" + messageData + "] | offset: [" + result.getRecordMetadata().offset() + "]");
                     }
                 }
         );
