@@ -1,5 +1,6 @@
 package com.example.api.config;
 
+import com.example.core.dto.EmailQueueDirectDto;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.context.annotation.Bean;
@@ -31,13 +32,13 @@ public class KafkaProducerConfig {
     }
 
     @Bean
-    public ProducerFactory<String, Object> producerFactory() {
+    public ProducerFactory<String, EmailQueueDirectDto> emailQueueDirectDtoProducerFactory() {
         Map<String, Object> configProps = producerApplicationConfig();
         return new DefaultKafkaProducerFactory<>(configProps);
     }
 
     @Bean
-    public KafkaTemplate<String, Object> kafkaTemplate() {
-        return new KafkaTemplate<>(producerFactory());
+    public KafkaTemplate<String, EmailQueueDirectDto> emailQueueDirectDtoKafkaTemplate() {
+        return new KafkaTemplate<>(emailQueueDirectDtoProducerFactory());
     }
 }

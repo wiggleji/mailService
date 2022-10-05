@@ -19,13 +19,13 @@ import java.util.Properties;
 @AllArgsConstructor
 public class EmailSender {
 
-    private final EmailMetadataWithUserContextService metadataService;
+    private final EmailMetadataService emailMetadataService;
 
     private final Encryption encryption;
 
     public Session generateMailSession(EmailMetadata metadata) {
         // 메일 전송을 위한 메일세션 생성
-        Properties properties = metadataService.generateEmailMetadataProperty(metadata);
+        Properties properties = emailMetadataService.generateEmailMetadataProperty(metadata);
         return Session.getDefaultInstance(properties, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
