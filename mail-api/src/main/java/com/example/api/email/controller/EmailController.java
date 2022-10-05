@@ -1,7 +1,7 @@
 package com.example.api.email.controller;
 
-import com.example.api.email.EmailService;
-import com.example.api.email.dto.EmailDto;
+import com.example.api.email.EmailWithUserContextService;
+import com.example.core.dto.EmailDto;
 import com.example.core.entity.email.Email;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,11 +18,11 @@ import java.util.List;
 @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
 public class EmailController {
 
-    private final EmailService emailService;
+    private final EmailWithUserContextService emailWithUserContextService;
 
     @GetMapping("/")
     public ResponseEntity<List<EmailDto>> emailList() {
-        List<Email> emailList = emailService.loadEmailListByUserId();
+        List<Email> emailList = emailWithUserContextService.loadEmailListByUserId();
         if (emailList.size() > 0)
             return new ResponseEntity<>(EmailDto.from(emailList), HttpStatus.OK);
         else return new ResponseEntity<>(Collections.emptyList(), HttpStatus.NO_CONTENT);
@@ -30,7 +30,7 @@ public class EmailController {
 
     @GetMapping("/{emailId}")
     public ResponseEntity<EmailDto> emailDetail(@PathVariable Long emailId) {
-        Email email = emailService.loadEmailByIdAndUserId(emailId);
+        Email email = emailWithUserContextService.loadEmailByIdAndUserId(emailId);
         return new ResponseEntity<>(EmailDto.from(email), HttpStatus.OK);
     }
 }

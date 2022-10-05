@@ -1,5 +1,6 @@
 package com.example.api.email.dto;
 
+import com.example.core.dto.EmailQueueDirectDto;
 import com.example.core.entity.email.Email;
 import com.example.core.entity.email.EmailFolder;
 import lombok.AllArgsConstructor;

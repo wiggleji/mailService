@@ -1,7 +1,7 @@
 package com.example.api.email.controller;
 
 import com.example.api.email.EmailQueueService;
-import com.example.api.email.EmailService;
+import com.example.api.email.EmailWithUserContextService;
 import com.example.api.email.dto.EmailRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
 public class EmailSendController {
 
-    private final EmailService emailService;
+    private final EmailWithUserContextService emailWithUserContextService;
 
     private final EmailQueueService emailQueueService;
 

@@ -10,11 +10,13 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import java.util.Collections;
 
 @EntityScan({"com.example.core"})
-@ComponentScan(basePackages = {"com.example"})
+@ComponentScan({"com.example.mailService", "com.example.api.utils"})
+@EnableJpaRepositories({"com.example.core"})
 @SpringBootApplication
 public class MailServiceApplication {
     public static void main(String[] args) {
         SpringApplication app = new SpringApplication(MailServiceApplication.class);
+        // application properties 에서 port 를 읽어오지 못해 강제 설정
         app.setDefaultProperties(Collections
                 .singletonMap("server.port", "8090"));
         app.run(args);
