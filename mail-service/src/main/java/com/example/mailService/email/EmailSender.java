@@ -1,9 +1,9 @@
 package com.example.mailService.email;
 
-import com.example.api.email.EmailMetadataWithUserContextService;
-import com.example.api.email.dto.EmailMessageDto;
 import com.example.core.entity.email.EmailMetadata;
 import com.example.api.utils.Encryption;
+import com.example.mailService.email.dto.EmailMessageDto;
+import com.example.mailService.email.service.EmailMetadataService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,7 @@ import java.util.Properties;
 @AllArgsConstructor
 public class EmailSender {
 
-    private final EmailMetadataWithUserContextService metadataService;
+    private final EmailMetadataService metadataService;
 
     private final Encryption encryption;
 

@@ -2,7 +2,7 @@ package com.example.api.email.controller;
 
 import com.example.api.email.EmailMetadataWithUserContextService;
 import com.example.api.email.dto.EmailMetadataCreateDto;
-import com.example.api.email.dto.EmailMetadataDto;
+import com.example.core.dto.EmailMetadataDto;
 import com.example.api.email.dto.EmailMetadataUpdateDto;
 import com.example.core.entity.email.EmailMetadata;
 import lombok.RequiredArgsConstructor;

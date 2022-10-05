@@ -1,8 +1,9 @@
 package com.example.mailService.email;
 
-import com.example.api.email.dto.EmailQueueDirectDto;
-import com.example.api.email.dto.EmailQueueScheduleDto;
+import com.example.core.dto.EmailQueueDirectDto;
+import com.example.core.dto.EmailQueueScheduleDto;
 import com.example.core.entity.email.Email;
+import com.example.mailService.email.service.EmailSendService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -20,7 +21,7 @@ public class KafkaEmailConsumer {
 
     @KafkaListener(topics = "email-direct", groupId = "email")
     public void consumeEmailDirectQueueWithHeader(
-            @Payload Object message, @Headers MessageHeaders messageHeaders) {
+            @Payload EmailQueueDirectDto message, @Headers MessageHeaders messageHeaders) {
         log.info("direct Email message received: " + message);
 
         Email email = emailSendService.sendDirectEmail((EmailQueueDirectDto) message);

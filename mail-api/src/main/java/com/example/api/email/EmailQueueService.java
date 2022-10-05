@@ -1,6 +1,6 @@
 package com.example.api.email;
 
-import com.example.api.email.dto.EmailQueueDirectDto;
+import com.example.core.dto.EmailQueueDirectDto;
 import com.example.api.email.dto.EmailRequestDto;
 import com.example.api.user.UserService;
 import com.example.core.entity.email.Email;

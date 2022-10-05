@@ -9,6 +9,7 @@ import com.example.core.exception.ResourceAlreadyExistException;
 import com.example.core.exception.ResourceNotFoundException;
 import com.example.core.repository.EmailMetadataRepository;
 import com.example.api.user.UserService;
+import com.example.core.service.CoreEmailMetadataService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +22,7 @@ import java.util.Properties;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class EmailMetadataWithUserContextService {
+public class EmailMetadataWithUserContextService extends CoreEmailMetadataService {
 
     private final EmailMetadataRepository emailMetadataRepository;
 
@@ -40,11 +41,6 @@ public class EmailMetadataWithUserContextService {
         if (emailMetadata.isPresent())
             return emailMetadata.get();
         else throw new ResourceNotFoundException("EmailMetadata not found with id: " + metadataId + " userId: " + requestUser.getId());
-    }
-
-    public EmailMetadata loadEmailMetadataByEmailAndUserId(String email, Long userId) {
-        return emailMetadataRepository.findByEmailAndUser_Id(email, userId)
-                .orElseThrow(() -> new ResourceNotFoundException("EmailMetadata not found by email & userId: " + email + userId));
     }
 
     public boolean emailMetadataExistsByEmailAndUserId(String email, Long userId) {
@@ -66,8 +62,6 @@ public class EmailMetadataWithUserContextService {
         EmailMetadata metadata = emailMetadataRepository.findByIdAndUser_Id(metadataId, requestUser.getId())
                 .orElseThrow(NoSuchElementException::new);
 
-        // TODO: MetadataUpdateDto의 위치를 바꿀것인지(api -> core)
-        //   혹은 MetadataUpdateDto를 별도의 Entity로 바꾸어 처리할지
         metadata.update(updateDto.toUpdateEntity(metadataId));
         return emailMetadataRepository.save(metadata);
     }
@@ -79,15 +73,5 @@ public class EmailMetadataWithUserContextService {
         if (!emailMetadata.getUser().equals(requestUser)) {
             throw new IllegalArgumentException("EmailMetadata is not equal to request metadata: " + requestDto);
         }
-    }
-
-    public Properties generateEmailMetadataProperty(EmailMetadata metadata) {
-        Properties properties = new Properties();
-        properties.put("mail.smtp.host", metadata.getSmtpHost());
-        properties.put("mail.smtp.port", metadata.getSmtpPort());
-        properties.put("mail.smtp.auth", "true");
-        properties.put("mail.smtp.ssl.enable", "true");
-        properties.put("mail.smtp.trust", metadata.getSmtpHost());
-        return properties;
     }
 }
