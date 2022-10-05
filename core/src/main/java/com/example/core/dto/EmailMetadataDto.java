@@ -1,4 +1,4 @@
-package com.example.api.email.dto;
+package com.example.core.dto;
 
 import com.example.core.entity.email.EmailMetadata;
 import lombok.Builder;

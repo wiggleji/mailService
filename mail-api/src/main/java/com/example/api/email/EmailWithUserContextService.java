@@ -7,6 +7,7 @@ import com.example.core.entity.user.User;
 import com.example.core.exception.ResourceNotFoundException;
 import com.example.core.repository.EmailRepository;
 import com.example.api.user.UserService;
+import com.example.core.service.CoreEmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +18,7 @@ import java.util.Optional;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class EmailWithUserContextService {
+public class EmailWithUserContextService extends CoreEmailService {
 
     private final EmailRepository emailRepository;
 
@@ -26,11 +27,6 @@ public class EmailWithUserContextService {
     public List<Email> loadEmailListByUserId() {
         User requestUser = userService.loadUserFromSecurityContextHolder();
         return emailRepository.findEmailsByUserId(requestUser.getId());
-    }
-
-    public Email loadEmailById(Long emailId) {
-        return emailRepository.findEmailById(emailId)
-                .orElseThrow(() -> new ResourceNotFoundException("Email not found by emailId: " + emailId));
     }
 
     public Email loadEmailByIdAndUserId(Long emailId) {
@@ -42,19 +38,8 @@ public class EmailWithUserContextService {
     }
 
     @Transactional(readOnly = false)
-    public Email createEmail(Email email) {
-        return emailRepository.save(email);
-    }
-
-    @Transactional(readOnly = false)
     public Email createScheduledEmail(EmailRequestDto requestDto) {
         User requestUser = userService.loadUserFromSecurityContextHolder();
         return emailRepository.save(requestDto.toScheduledEmailEntity(requestUser.getId()));
-    }
-
-    @Transactional(readOnly = false)
-    public Email updateEmailToInbox(Email email) {
-        email.updateEmailFolder(EmailFolder.INBOX);
-        return emailRepository.save(email);
     }
 }

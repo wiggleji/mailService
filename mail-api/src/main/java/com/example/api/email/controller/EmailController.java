@@ -1,7 +1,7 @@
 package com.example.api.email.controller;
 
 import com.example.api.email.EmailWithUserContextService;
-import com.example.api.email.dto.EmailDto;
+import com.example.core.dto.EmailDto;
 import com.example.core.entity.email.Email;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
