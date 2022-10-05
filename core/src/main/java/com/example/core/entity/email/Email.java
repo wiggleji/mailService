@@ -24,6 +24,7 @@ public class Email extends BaseEntity {
     private Long userId;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private EmailFolder emailFolder;
 
     @Column(nullable = false)

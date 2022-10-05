@@ -3,10 +3,8 @@ package com.example.api.email.dto;
 import com.example.core.dto.EmailQueueDirectDto;
 import com.example.core.entity.email.Email;
 import com.example.core.entity.email.EmailFolder;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -29,9 +27,10 @@ public class EmailRequestDto {
 
     private String text;
 
-    private LocalDateTime dateTimeSend = LocalDateTime.now();
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+    private LocalDateTime dateTimeSend = LocalDateTime.now().withSecond(0).withNano(0);
 
-    private LocalDateTime dateTimeReceive = LocalDateTime.now();
+    private LocalDateTime dateTimeReceive = null;
 
     public EmailQueueDirectDto toEmailQueueDirectDto(Long userId) {
         return EmailQueueDirectDto.builder()

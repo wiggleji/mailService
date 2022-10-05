@@ -2,13 +2,17 @@ package com.example.core.dto;
 
 import com.example.core.entity.email.Email;
 import com.example.core.entity.email.EmailFolder;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class EmailQueueDirectDto {
 
@@ -28,7 +32,7 @@ public class EmailQueueDirectDto {
 
     private String text;
 
-    private LocalDateTime dateTimeSend = LocalDateTime.now();
+    private LocalDateTime dateTimeSend = LocalDateTime.now().withSecond(0).withNano(0);
 
     private LocalDateTime dateTimeReceive = LocalDateTime.now();
 

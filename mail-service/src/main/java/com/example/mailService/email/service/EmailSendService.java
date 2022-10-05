@@ -18,7 +18,6 @@ import javax.mail.Session;
 
 @Slf4j
 @Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class EmailSendService {
 

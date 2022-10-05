@@ -1,5 +1,7 @@
 package com.example.mailService.config;
 
+import com.example.core.dto.EmailQueueDirectDto;
+import com.example.core.dto.EmailQueueScheduleDto;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.context.annotation.Bean;
@@ -17,37 +19,43 @@ import java.util.Map;
 @Configuration
 public class KafkaConsumerConfig {
 
-    private Map<String, Object> consumerFactoryConfig(JsonDeserializer<Object> deserializer) {
+    private Map<String, Object> consumerFactoryConfig() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "email");
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, deserializer);
         return props;
     }
 
-    private JsonDeserializer<Object> jsonDeserializer() {
-        JsonDeserializer<Object> deserializer = new JsonDeserializer<>(Object.class);
-        deserializer.setRemoveTypeHeaders(false);
-        deserializer.addTrustedPackages("*");
-        deserializer.setUseTypeMapperForKey(true);
-        return deserializer;
-    }
-
     @Bean
-    public ConsumerFactory<String, Object> consumerFactory() {
-        JsonDeserializer<Object> deserializer = jsonDeserializer();
+    public ConsumerFactory<String, EmailQueueDirectDto> emailQueueDirectDtoConsumerFactory() {
         return new DefaultKafkaConsumerFactory<>(
-                consumerFactoryConfig(deserializer),
+                consumerFactoryConfig(),
                 new StringDeserializer(),
-                deserializer
+                new JsonDeserializer<>(EmailQueueDirectDto.class)
         );
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, Object> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(consumerFactory());
+    public ConsumerFactory<String, EmailQueueScheduleDto> emailQueueScheduleDtoConsumerFactory() {
+        return new DefaultKafkaConsumerFactory<>(
+                consumerFactoryConfig(),
+                new StringDeserializer(),
+                new JsonDeserializer<>(EmailQueueScheduleDto.class)
+        );
+    }
+
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, EmailQueueDirectDto> emailQueueDirectDtoContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, EmailQueueDirectDto> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(emailQueueDirectDtoConsumerFactory());
+        return factory;
+    }
+
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, EmailQueueScheduleDto> emailQueueScheduleDtoContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, EmailQueueScheduleDto> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(emailQueueScheduleDtoConsumerFactory());
         return factory;
     }
 }

@@ -1,5 +1,6 @@
 package com.example.mailService.config;
 
+import com.example.core.dto.EmailQueueScheduleDto;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.context.annotation.Bean;
@@ -27,13 +28,13 @@ public class KafkaProducerConfig {
     }
 
     @Bean
-    public ProducerFactory<String, Object> producerFactory() {
+    public ProducerFactory<String, EmailQueueScheduleDto> emailQueueScheduleDtoProducerFactory() {
         Map<String, Object> configProps = producerApplicationConfig();
         return new DefaultKafkaProducerFactory<>(configProps);
     }
 
     @Bean
-    public KafkaTemplate<String, Object> kafkaTemplate() {
-        return new KafkaTemplate<>(producerFactory());
+    public KafkaTemplate<String, EmailQueueScheduleDto> emailQueueScheduleDtoKafkaTemplate() {
+        return new KafkaTemplate<>(emailQueueScheduleDtoProducerFactory());
     }
 }

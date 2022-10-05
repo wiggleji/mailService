@@ -19,21 +19,21 @@ public class KafkaEmailConsumer {
 
     private final EmailSendService emailSendService;
 
-    @KafkaListener(topics = "email-direct", groupId = "email")
+    @KafkaListener(topics = "email-direct", groupId = "email", containerFactory = "emailQueueDirectDtoContainerFactory")
     public void consumeEmailDirectQueueWithHeader(
             @Payload EmailQueueDirectDto message, @Headers MessageHeaders messageHeaders) {
         log.info("direct Email message received: " + message);
 
-        Email email = emailSendService.sendDirectEmail((EmailQueueDirectDto) message);
+        Email email = emailSendService.sendDirectEmail(message);
         log.info("direct Email: " + email + " was sent. " + email.getDateTimeSend());
     }
 
-    @KafkaListener(topics = "email-schedule", groupId = "email")
+    @KafkaListener(topics = "email-schedule", groupId = "email", containerFactory = "emailQueueScheduleDtoContainerFactory")
     public void consumeEmailScheduleQueueWithHeader(
-            @Payload Object message, @Headers MessageHeaders messageHeaders) {
+            @Payload EmailQueueScheduleDto message, @Headers MessageHeaders messageHeaders) {
         log.info("schedule Email message received: " + message);
 
-        Email email = emailSendService.sendScheduleEmail((EmailQueueScheduleDto) message);
+        Email email = emailSendService.sendScheduleEmail(message);
         log.info("schedule Email: " + email + " was sent. " + email.getDateTimeSend());
     }
 }

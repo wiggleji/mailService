@@ -1,13 +1,17 @@
 package com.example.core.dto;
 
 import com.example.core.entity.email.Email;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class EmailQueueScheduleDto {
 
@@ -15,7 +19,7 @@ public class EmailQueueScheduleDto {
 
     private LocalDateTime dateTimeSend;
 
-    public static EmailQueueScheduleDto fromEmailEntity(Email email) {
+    public static EmailQueueScheduleDto from(Email email) {
         return EmailQueueScheduleDto.builder()
                 .id(email.getId())
                 .dateTimeSend(email.getDateTimeSend())
