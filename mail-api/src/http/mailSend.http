@@ -46,7 +46,8 @@ Authorization: Bearer {{authorizationKey}}
   "emailCcList": "",
   "emailBccList": "",
   "subject": "testMailFromJava",
-  "text": "실제 이메일전송테스트"
+  "text": "4 예약 이메일전송테스트",
+  "dateTimeSend": "2022-10-05 23:40:00"
 }
 
 ###
