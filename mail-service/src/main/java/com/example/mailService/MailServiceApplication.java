@@ -11,7 +11,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import java.util.Collections;
 
 @EntityScan({"com.example.core"})
-@ComponentScan({"com.example.mailService", "com.example.api.utils"})
+@ComponentScan(basePackages = {"com.example.mailService", "com.example.api.utils"})
 @EnableJpaRepositories({"com.example.core"})
 @EnableScheduling
 @SpringBootApplication
