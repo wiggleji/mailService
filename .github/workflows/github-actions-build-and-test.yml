@@ -10,7 +10,7 @@ on:
       -  'main'
       -  'develop'
   pull_request:
-    branches: 
+    branches:
       -  'main'
       -  'develop'
 
@@ -36,8 +36,8 @@ jobs:
           java-version: 11.0.11
           distribution: adopt
       - name: Setup MySQL
-  # You may pin to the exact commit or the version.
-  # uses: mirromutth/mysql-action@de1fba8b3f90ce8db80f663a7043be3cf3231248
+        # You may pin to the exact commit or the version.
+        # uses: mirromutth/mysql-action@de1fba8b3f90ce8db80f663a7043be3cf3231248
         uses: mirromutth/mysql-action@v1.1
         with:
           # Version of MySQL to use
@@ -50,7 +50,7 @@ jobs:
           mysql user: root
           # MYSQL_PASSWORD - specified superuser password which user is power for created database
           mysql password: test1234
-            
+
       - name: Maven Cache
         uses: skjolber/maven-cache-github-action@v1.1
         with:
@@ -58,19 +58,19 @@ jobs:
 
       - name: extract version for pom.xml
         run: echo "VERSION=$(grep -oPm2 "(?<=<version>)[^<]+" pom.xml | sed -n 2p)" >> $GITHUB_ENV
-      
+
       - name: Spring Boot Build with Maven
-        run: mvn --batch-mode --update-snapshots verify
-        
+        run: mvn compile --batch-mode --update-snapshots verify
+
       - name: Maven Cache
         uses: skjolber/maven-cache-github-action@v1.1
         with:
           step: save
-          
+
       - name: Current Time
         uses: gerred/current-time@v1.0.0
         id: current-time
-        
+
       - name: get current time
         env:
           TIME: "${{ steps.current-time.outputs.time }}"
