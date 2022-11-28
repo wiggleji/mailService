@@ -6,7 +6,7 @@
 	<modules>
 		<module>core</module>
 		<module>mail-api</module>
-        <module>mail-service</module>
+		<module>mail-service</module>
     </modules>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
